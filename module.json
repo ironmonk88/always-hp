@@ -1,0 +1,24 @@
+{
+  "name": "always-hp",
+  "title": "Always HP",
+  "description": "We're always updating HP, add a window to make it easier to adjust that",
+  "version": "1.0.0",
+  "minimumCoreVersion": "0.7.0",
+  "compatibleCoreVersion": "0.7.7",
+  "author": "Michael Weisner",
+  "url": "https://github.com/ironmonk88/always-hp",
+  "manifest": "https://raw.githubusercontent.com/ironwood88/always-hp/master/module.json",
+  "download": "https://github.com/ironwood88/always-hp/archive/master.zip",
+  "esmodules": [
+    "alwayshp.mjs"
+  ],
+  "styles": [ "./css/alwayshp.css" ],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "langs/en.json"
+    }
+  ]
+}
