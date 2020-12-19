@@ -1,2 +1,32 @@
-<html>
-</html>
+<div id="alwayshp-container">
+    <!-- header -->
+    <header id="alwayshp-header" class="alwayshp-header">
+        <!-- selected token name -->
+        <h1 id="alwayshp-move-handle">
+            <span id="selected-characters">Selected Character</span>
+        </h1>
+    </header>
+
+    <!-- content -->
+    <div class="alwayshp-content">
+        <!-- clock display -->
+        <section class="calendar--clock">
+
+            <div class="day-time-cues">
+                <div id="alwayshp-btn-dead" class="alwayshp-btn" title="{{localize 'ALWAYSHP.SetToDead'}}">
+                    <i class="fas fa-skull"></i>
+                </div>
+                <div id="alwayshp-btn-hurt" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HurtCharacter'}}">
+                    <i class="fas fa-tired"></i>
+                </div>
+                <input id="alwayshp-hp" />
+                <div id="alwayshp-btn-heal" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HealCharacter'}}">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div id="alwayshp-btn-fullheal" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HealFully'}}">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
