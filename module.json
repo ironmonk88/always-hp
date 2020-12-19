@@ -12,7 +12,6 @@
   "esmodules": [
     "alwayshp.js"
   ],
-  "styles": [ "./css/alwayshp.css" ],
   "packs": [],
   "languages": [
     {
