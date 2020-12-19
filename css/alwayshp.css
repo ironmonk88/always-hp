@@ -1,2 +1,13 @@
-.alwayshp-container{
+.alwayshp-container {
+    height: 100px;
+    width:300px;
+    border-radius: 5px;
+    background: rgba(34,34,34,1);
+    color: rgba(255,255,255,.87);
+    top: 100px;
+    left: 100px;
+    position: fixed;
+    z-index: 100;
+    overflow: hidden;
+    display: flex;
 }
