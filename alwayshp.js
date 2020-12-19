@@ -1,4 +1,4 @@
-import { registerSettings } from "./modules/registerSettings.mjs";
+import { registerSettings } from "./modules/settings.js";
 
 export let debug = (...args) => {
     if (debugEnabled > 1) console.log("DEBUG: alwayshp | ", ...args);
