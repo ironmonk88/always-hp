@@ -1,13 +1,89 @@
-.alwayshp-container {
-    height: 100px;
-    width:300px;
+#alwayshp-container {
+    height: auto;
+    width: 300px;
     border-radius: 5px;
-    background: rgba(34,34,34,1);
+    background: url(../../../ui/denim075.png) repeat;
     color: rgba(255,255,255,.87);
-    top: 100px;
-    left: 100px;
+    box-shadow: 0 0 20px #000;
+    border: 1px solid #000;
     position: fixed;
     z-index: 100;
     overflow: hidden;
-    display: flex;
+    flex-direction: column;
+    display:flex !important;
+}
+
+#alwayshp-container.loading {
+    display: none !important;
+}
+
+#alwayshp-header {
+    flex: 0 0 27px;
+}
+
+#alwayshp-move-handle {
+    padding-left: 5px;
+    padding-top: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 0px;
+    border-bottom: 2px solid #782e22;
+    min-height:27px;
+}
+
+.alwayshp-content {
+    flex: 0 0 30px;
+    padding-top:2px;
+    text-align:center;
+}
+
+#alwayshp-hp {
+    width: 75px;
+    text-align: center;
+    background: url(../../../ui/parchment.jpg) repeat;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.alwayshp-btn {
+    line-height: 24px;
+    width: 30px;
+    text-align: center;
+    /*background: rgba(255, 255, 240, 0.8);
+    border: 1px solid #999;
+    box-shadow: 0 0 2px #FFF inset;
+    */
+    border-radius: 3px;
+    display: inline-block;
+    vertical-align: top;
+    cursor:pointer;
+}
+
+#alwayshp-btn-fullheal{
+    line-height:21px;
+}
+
+#alwayshp-btn-fullheal i{
+    padding-top:6px;
+}
+
+.bad-ones{
+    
+    border: 1px solid red;
+    border-bottom: 1px solid #ff6400;
+    box-shadow: 0 0 10px #ff6400;
+}
+
+.bad-ones i {
+    color: red;
+}
+
+.good-ones {
+    border: 1px solid rgb(77,208,225);
+    box-shadow: 0 0 10px rgb(77, 208, 225);
+}
+
+.good-ones i {
+    color: rgb(77, 208, 225);
 }

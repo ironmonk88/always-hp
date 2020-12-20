@@ -1,5 +1,3 @@
-import { registerSettings } from "./modules/settings.js";
-
 export let debug = (...args) => {
     if (debugEnabled > 1) console.log("DEBUG: alwayshp | ", ...args);
 };
@@ -14,9 +12,51 @@ export let i18n = key => {
 
 export class AlwaysHP {
     static app = null;
+    static selectedtoken = "";
 
     static init() {
+        //CONFIG.debug.hooks = true;
         AlwaysHP.app = new AlwaysHPApp().render(true);
+        log('rendering app');
+    }
+
+    static changeHP(value) {
+        //CONFIG.debug.hooks = true;
+        return Promise.all(canvas.tokens.controlled.map(t => {
+            const a = t.actor; //game.actors.get(t.actor.id);
+
+            if (value == 'dead') {
+                //set hp to 0 and add the death effect
+                log('setting dead', a);
+                let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
+                let effect = a && status ? status : CONFIG.controlIcons.defeated;
+                t.toggleEffect(effect, { overlay: true, active: true });
+                a.applyDamage(a.data.data.attributes.hp.value).then(() => {
+                    AlwaysHP.refreshSelected();
+                });
+            } else {
+                let hp = a.data.data.attributes.hp;
+                let val = value;
+                if (value == 'full') {
+                    val = (hp.value - hp.max);
+                }
+
+                log('applying damage', a, val);
+                a.applyDamage(val).then(() => {
+                    AlwaysHP.refreshSelected();
+                });
+            }
+        }));
+    }
+
+    static refreshSelected() {
+        if (canvas.tokens.controlled.length == 0)
+            AlwaysHP.selectedtoken = "";
+        else if (canvas.tokens.controlled.length == 1)
+            AlwaysHP.selectedtoken = canvas.tokens.controlled[0].data.name + " [" + canvas.tokens.controlled[0].actor.data.data.attributes.hp.value + "]";
+        else
+            AlwaysHP.selectedtoken = "Multiple (" + canvas.tokens.controlled.length + ")";
+        AlwaysHP.app.changeToken(AlwaysHP.selectedtoken);
     }
 }
 
@@ -27,59 +67,48 @@ export class AlwaysHPApp extends Application {
         options.id = "alwayshp-app";
         options.template = "modules/always-hp/templates/alwayshp.html";
         options.popOut = false;
-        options.width = 300;
         options.resizable = false;
         return options;
     }
 
     getData() {
-        return {};
+        return {
+            selectedtoken: AlwaysHP.selectedtoken
+        };
+    }
+
+    show() {
+        log('showing');
+        $(this.element).removeClass('loading').css({ display: 'flex !important' });
     }
 
     setPos(pos) {
-        return new Promise(resolve => {
-            function check() {
-                let elmnt = document.getElementById("alwayshp-container");
-                if (elmnt) {
-                    elmnt.style.bottom = null;
-                    let xPos = (pos.left) > window.innerWidth ? window.innerWidth - 200 : pos.left;
-                    let yPos = (pos.top) > window.innerHeight - 20 ? window.innerHeight - 100 : pos.top;
-                    elmnt.style.top = (yPos) + "px";
-                    elmnt.style.left = (xPos) + "px";
-                    elmnt.style.position = 'fixed';
-                    elmnt.style.zIndex = 100;
-                    resolve();
-                } else {
-                    setTimeout(check, 30);
-                }
-            }
-            check();
-        });
+        log('set pos', pos);
+        this.setPosition(pos.left, pos.top);
+
+        let elmnt = this.element;
+        let xPos = (pos.left) > window.innerWidth ? window.innerWidth - 200 : pos.left;
+        let yPos = (pos.top) > window.innerHeight - 20 ? window.innerHeight - 100 : pos.top;
+        $(elmnt).css({left:xPos, top:yPos});
+        log('set pos complete', pos);
+
+        return this;
     }
 
     loadSettings() {
         let resourcename = game.settings.get('always-hp', 'resourcename');
     }
 
-    static resetPos() {
-        let pos = { bottom: 8, left: 15 }
-        return new Promise(resolve => {
-            function check() {
-                let elmnt = document.getElementById("alwayshp-container");
-                if (elmnt) {
-                    log('Resetting Position');
-                    elmnt.style.top = null;
-                    elmnt.style.bottom = (pos.bottom) + "%";
-                    elmnt.style.left = (pos.left) + "%";
-                    game.user.update({ flags: { 'alwayshp': { 'alwayshpPos': { top: elmnt.offsetTop, left: elmnt.offsetLeft } } } });
-                    elmnt.style.bottom = null;
-                    resolve();
-                } else {
-                    setTimeout(check, 30);
-                }
-            }
-            check();
-        })
+    changeToken(display) {
+        $('#selected-characters', this.element).html(display);
+    }
+
+    get getValue() {
+        return $('#alwayshp-hp', this.element).val();
+    }
+
+    clearInput() {
+        $('#alwayshp-hp', this.element).val('');
     }
 
     activateListeners(html) {
@@ -88,18 +117,42 @@ export class AlwaysHPApp extends Application {
         html.find('#alwayshp-btn-dead').click(ev => {
             ev.preventDefault();
             log('set character to dead');
+            AlwaysHP.changeHP('dead');
+            this.clearInput();
         });
         html.find('#alwayshp-btn-hurt').click(ev => {
             ev.preventDefault();
             log('set character to hurt');
+            let value = this.getValue;
+            if(value != '') AlwaysHP.changeHP(value);
+            this.clearInput();
         });
         html.find('#alwayshp-btn-heal').click(ev => {
             ev.preventDefault();
             log('set character to heal');
+            let value = this.getValue;
+            if (value != '') AlwaysHP.changeHP(-value);
+            this.clearInput();
         });
         html.find('#alwayshp-btn-fullheal').click(ev => {
             ev.preventDefault();
             log('set character to fullheal');
+            AlwaysHP.changeHP('full');
+            this.clearInput();
+        });
+        html.find('#alwayshp-hp').focus(ev => {
+            ev.preventDefault();
+            let elem = ev.target;
+            if (elem.setSelectionRange) {
+                elem.focus();
+                elem.setSelectionRange(0, $(elem).val().length);
+            } else if (elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', $(elem).val().length);
+                range.moveStart('character', 0);
+                range.select();
+            }
         });
         html.find('#alwayshp-move-handle').mousedown(ev => {
             ev.preventDefault();
@@ -160,23 +213,22 @@ export class AlwaysHPApp extends Application {
                         game.user.update({ flags: { 'alwayshp': { 'alwayshpPos': { top: yPos, left: xPos } } } });
                     }
                 }
-            } else if (isRightMB) {
-                AlwaysHPApp.resetPos();
             }
         });
     }
 }
 
-Hooks.once('init', AlwaysHP.init);
 Hooks.on('ready', () => {
+    AlwaysHP.init();
+});
+
+Hooks.on('renderAlwaysHPApp', () => {
     if (game.user.data.flags.alwayshp) {
-        AlwaysHP.app.setPos(game.user.data.flags.alwayshp.alwayshpPos);
+        let pos = game.user.data.flags.alwayshp.alwayshpPos;
+        log('setting position', pos);
+
+        AlwaysHP.app.setPos(pos).show();
     }
 });
-/*
-Hooks.on('ready', () => {
-    renderTemplate("modules/always-hp/templates/alwaydhp.html", {}).then(html => {
-        ahp.setPos(game.user.data.flags.alwayshp.alwayshpPos)
-        ahp.render(true);
-    });
-});*/
+
+Hooks.on('controlToken', AlwaysHP.refreshSelected);

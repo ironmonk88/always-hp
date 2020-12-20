@@ -1,32 +1,26 @@
-<div id="alwayshp-container">
+<div id="alwayshp-container" class="loading">
     <!-- header -->
     <header id="alwayshp-header" class="alwayshp-header">
         <!-- selected token name -->
-        <h1 id="alwayshp-move-handle">
-            <span id="selected-characters">Selected Character</span>
-        </h1>
+        <h3 id="alwayshp-move-handle">
+            <span id="selected-characters">{{selectedtoken}}</span>
+        </h3>
     </header>
 
     <!-- content -->
     <div class="alwayshp-content">
-        <!-- clock display -->
-        <section class="calendar--clock">
-
-            <div class="day-time-cues">
-                <div id="alwayshp-btn-dead" class="alwayshp-btn" title="{{localize 'ALWAYSHP.SetToDead'}}">
-                    <i class="fas fa-skull"></i>
-                </div>
-                <div id="alwayshp-btn-hurt" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HurtCharacter'}}">
-                    <i class="fas fa-tired"></i>
-                </div>
-                <input id="alwayshp-hp" />
-                <div id="alwayshp-btn-heal" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HealCharacter'}}">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <div id="alwayshp-btn-fullheal" class="alwayshp-btn" title="{{localize 'ALWAYSHP.HealFully'}}">
-                    <i class="fas fa-heart"></i>
-                </div>
-            </div>
-        </section>
+        <div id="alwayshp-btn-dead" class="alwayshp-btn bad-ones" title="{{localize 'ALWAYSHP.SetToDead'}}">
+            <i class="fas fa-skull"></i>
+        </div>
+        <div id="alwayshp-btn-hurt" class="alwayshp-btn bad-ones" title="{{localize 'ALWAYSHP.HurtCharacter'}}">
+            <i class="fas fa-angle-double-down"></i>
+        </div>
+        <input id="alwayshp-hp" type="text" />
+        <div id="alwayshp-btn-heal" class="alwayshp-btn good-ones" title="{{localize 'ALWAYSHP.HealCharacter'}}">
+            <i class="fas fa-angle-double-up"></i>
+        </div>
+        <div id="alwayshp-btn-fullheal" class="alwayshp-btn good-ones" title="{{localize 'ALWAYSHP.HealFully'}}">
+            <i class="fas fa-heart"></i>
+        </div>
     </div>
 </div>
