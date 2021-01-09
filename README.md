@@ -17,6 +17,8 @@ Click the heart to heal the token fully.
 
 By grabbing the window by the top bar it can be dragged around the screen and placed where it's most convenient for you to reach.
 
+![AlwaysHP](/screenshots/alwayshp.png)
+
 ## Bug Reporting
 Please feel free to contact me on discord if you have any questions or concerns. ironmonk88#4075
 
