@@ -226,9 +226,9 @@ Hooks.on('renderAlwaysHPApp', () => {
     if (game.user.data.flags.alwayshp) {
         let pos = game.user.data.flags.alwayshp.alwayshpPos;
         log('setting position', pos);
-
-        AlwaysHP.app.setPos(pos).show();
+        AlwaysHP.app.setPos(pos);
     }
+    AlwaysHP.app.show();
 });
 
 Hooks.on('controlToken', AlwaysHP.refreshSelected);
