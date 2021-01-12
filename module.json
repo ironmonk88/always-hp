@@ -9,6 +9,7 @@
   "url": "https://github.com/ironmonk88/always-hp",
   "manifest": "https://raw.githubusercontent.com/ironmonk88/always-hp/master/module.json",
   "download": "https://github.com/ironmonk88/always-hp/archive/1.0.7.zip",
+  "systems": ["dnd5e"],
   "esmodules": [
     "alwayshp.js",
     "module/settings.js"
