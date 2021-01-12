@@ -31,9 +31,15 @@ export class AlwaysHP {
                 let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
                 let effect = a && status ? status : CONFIG.controlIcons.defeated;
                 t.toggleEffect(effect, { overlay: true, active: true });
-                a.applyDamage(a.data.data.attributes.hp.value).then(() => {
-                    AlwaysHP.refreshSelected();
-                });
+                if (game.system.id == "dnd5e") {
+                    a.applyDamage(a.data.data.attributes.hp.value).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                } else {
+                    AlwaysHP.applyDamage(a, a.data.data.attributes.hp.value).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                }
             } else {
                 let hp = a.data.data.attributes.hp;
                 let val = value;
@@ -42,11 +48,38 @@ export class AlwaysHP {
                 }
 
                 log('applying damage', a, val);
-                a.applyDamage(val).then(() => {
-                    AlwaysHP.refreshSelected();
-                });
+                if (game.system.id == "dnd5e") {
+                    a.applyDamage(val).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                } else {
+                    AlwaysHP.applyDamage(a, val).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                }
             }
         }));
+    }
+
+    static async applyDamage(actor, amount = 0, multiplier = 1) {
+        amount = Math.floor(parseInt(amount) * multiplier);
+        const hp = actor.data.data.attributes.hp;
+
+        // Deduct damage from temp HP first
+        const tmp = parseInt(hp.temp) || 0;
+        const dt = amount > 0 ? Math.min(tmp, amount) : 0;
+
+        // Remaining goes to health
+        const tmpMax = parseInt(hp.tempmax) || 0;
+        const dh = Math.clamped(hp.value - (amount - dt), 0, hp.max + tmpMax);
+
+        // Update the Actor
+        const updates = {
+            "data.attributes.hp.temp": tmp - dt,
+            "data.attributes.hp.value": dh
+        };
+
+        return actor.update(updates);
     }
 
     static refreshSelected() {
