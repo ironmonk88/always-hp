@@ -137,7 +137,7 @@ export class AlwaysHPApp extends Application {
     }
 
     get getValue() {
-        return $('#alwayshp-hp', this.element).val();
+        return parseInt($('#alwayshp-hp', this.element).val());
     }
 
     clearInput() {
@@ -157,14 +157,14 @@ export class AlwaysHPApp extends Application {
             ev.preventDefault();
             log('set character to hurt');
             let value = this.getValue;
-            if(value != '') AlwaysHP.changeHP(value);
+            if(value != '') AlwaysHP.changeHP(Math.abs(value));
             this.clearInput();
         });
         html.find('#alwayshp-btn-heal').click(ev => {
             ev.preventDefault();
             log('set character to heal');
             let value = this.getValue;
-            if (value != '') AlwaysHP.changeHP(-value);
+            if (value != '') AlwaysHP.changeHP(-Math.abs(value));
             this.clearInput();
         });
         html.find('#alwayshp-btn-fullheal').click(ev => {
@@ -185,6 +185,18 @@ export class AlwaysHPApp extends Application {
                 range.moveEnd('character', $(elem).val().length);
                 range.moveStart('character', 0);
                 range.select();
+            }
+        }).keypress(ev => {
+            if (ev.which == 13) {
+                let value = this.getValue;
+                if (value != '' && value != 0) {
+                    ev.preventDefault();
+
+                    let rawvalue = $('#alwayshp-hp', this.element).val();
+
+                    AlwaysHP.changeHP(rawvalue.startsWith('+') ? -Math.abs(value) : Math.abs(value)); //Heal with a + but everything else is a hurt
+                    this.clearInput();
+                }
             }
         });
         html.find('#alwayshp-move-handle').mousedown(ev => {
