@@ -137,7 +137,10 @@ export class AlwaysHPApp extends Application {
     }
 
     get getValue() {
-        return parseInt($('#alwayshp-hp', this.element).val());
+        let value = parseInt($('#alwayshp-hp', this.element).val());
+        if (isNaN(value))
+            value = 1;
+        return value;
     }
 
     clearInput() {
