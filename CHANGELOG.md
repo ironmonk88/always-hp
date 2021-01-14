@@ -1,3 +1,6 @@
+# Version 1.0.10
+Fixed a bug, that if you press the up or down arrows and the text box is blank it would remove all HP.
+
 # Version 1.0.9
 Added functionality to use the enter key on the text box.  Using a +number will heal, everything else will hurt.  So if you want to remove HP, you don't need to add a - out front.  Just the number will do.
 
