@@ -1,3 +1,5 @@
+import { registerSettings } from "./modules/settings.js";
+
 export let debug = (...args) => {
     if (debugEnabled > 1) console.log("DEBUG: alwayshp | ", ...args);
 };
@@ -16,6 +18,7 @@ export class AlwaysHP {
 
     static init() {
         //CONFIG.debug.hooks = true;
+        registerSettings();
         AlwaysHP.app = new AlwaysHPApp().render(true);
         log('rendering app');
     }
@@ -28,9 +31,11 @@ export class AlwaysHP {
             if (value == 'dead') {
                 //set hp to 0 and add the death effect
                 log('setting dead', a);
-                let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
-                let effect = a && status ? status : CONFIG.controlIcons.defeated;
-                t.toggleEffect(effect, { overlay: true, active: true });
+                if (game.settings.get("always-hp", "add-defeated")) {
+                    let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
+                    let effect = a && status ? status : CONFIG.controlIcons.defeated;
+                    t.toggleEffect(effect, { overlay: true, active: true });
+                }
                 if (game.system.id == "dnd5e") {
                     a.applyDamage(a.data.data.attributes.hp.value).then(() => {
                         AlwaysHP.refreshSelected();
@@ -247,6 +252,7 @@ export class AlwaysHPApp extends Application {
                     function closeDragElement() {
                         // stop moving when mouse button is released:
                         elmnt.onmousedown = null;
+                        elmnt.style.zIndex = null;
                         document.onmouseup = null;
                         document.onmousemove = null;
                         let xPos = (elmnt.offsetLeft - pos1) > window.innerWidth ? window.innerWidth - 200 : (elmnt.offsetLeft - pos1);
