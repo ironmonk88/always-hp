@@ -1,4 +1,4 @@
-# Version 1.0.12
+# Version 1.0.14
 Added option to not set the defeated status when clicking the skull.
 
 # Version 1.0.10
