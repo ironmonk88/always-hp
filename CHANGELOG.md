@@ -1,3 +1,6 @@
+# Version 1.0.12
+Added option to not set the defeated status when clicking the skull.
+
 # Version 1.0.10
 Fixed a bug, that if you press the up or down arrows and the text box is blank it would remove all HP.
 
