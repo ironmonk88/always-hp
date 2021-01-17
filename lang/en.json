@@ -2,7 +2,7 @@
   "ALWAYSHP.SetToDead": "Set Character to Dead",
   "ALWAYSHP.HurtCharacter": "Hurt the selected Character",
   "ALWAYSHP.HealCharacter": "Heal the selected Character",
-  "ALWAYSHP.HealFully": "Fully Heal the selected Character"
+  "ALWAYSHP.HealFully": "Fully Heal the selected Character",
   
   "ALWAYSHP.ResourceTitle": "Resource to change",
   "ALWAYSHP.ResourceHint": "Most systems use attributes.hp, but if the system you use doesn't, or if you'd rather use a different property, you can set it here.",
