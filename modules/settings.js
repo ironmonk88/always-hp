@@ -7,6 +7,15 @@ export const registerSettings = function () {
         scope: "world",
         default: "attributes.hp",
         type: String,
+        config: false
+    });
+
+    game.settings.register(modulename, "add-defeated", {
+        name: game.i18n.localize("ALWAYSHP.DefeatedTitle"),
+        hint: game.i18n.localize("ALWAYSHP.DefeatedHint"),
+        scope: "world",
+        default: true,
+        type: Boolean,
         config: true
     });
 }
