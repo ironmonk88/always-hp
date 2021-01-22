@@ -18,4 +18,13 @@ export const registerSettings = function () {
         type: Boolean,
         config: true
     });
+
+    game.settings.register(modulename, "gm-only", {
+        name: game.i18n.localize("ALWAYSHP.GMOnlyTitle"),
+        hint: game.i18n.localize("ALWAYSHP.GMOnlyHint"),
+        scope: "world",
+        default: false,
+        type: Boolean,
+        config: true
+    });
 }
