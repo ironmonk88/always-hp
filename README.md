@@ -17,6 +17,8 @@ Click the heart to heal the token fully and remove the token's dead status.
 
 Version 1.0.16 added functionality, Right-click the skull to set the HP to 0 and NOT set the token's dead status. Right-click the heart to fully heal without removing the dead status.
 
+Version 1.0.17 added functionality, Shift click the skull to toggle the dead status.
+
 Version 1.0.9 added functionality, pressing the enter key in the text box will either heal if there's a + in front of the text ie '+5' or hurt if there's a - out front, or nothing so either a '-5' or '5' will hurt the character.
 
 By grabbing the window by the top bar it can be dragged around the screen and placed where it's most convenient for you to reach.
