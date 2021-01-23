@@ -19,7 +19,7 @@ export class AlwaysHP {
     static init() {
         //CONFIG.debug.hooks = true;
         registerSettings();
-        if(game.user.isGM || !game.settings.get("always-hp", "gm-only"))
+        if (game.settings.get("always-hp", "show-dialog"))
             AlwaysHP.app = new AlwaysHPApp().render(true);
         log('rendering app');
     }

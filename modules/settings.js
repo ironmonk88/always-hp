@@ -19,11 +19,11 @@ export const registerSettings = function () {
         config: true
     });
 
-    game.settings.register(modulename, "gm-only", {
-        name: game.i18n.localize("ALWAYSHP.GMOnlyTitle"),
-        hint: game.i18n.localize("ALWAYSHP.GMOnlyHint"),
-        scope: "world",
-        default: false,
+    game.settings.register(modulename, "show-dialog", {
+        name: game.i18n.localize("ALWAYSHP.ShowDialogTitle"),
+        hint: game.i18n.localize("ALWAYSHP.ShowDialogHint"),
+        scope: "client",
+        default: true,
         type: Boolean,
         config: true
     });

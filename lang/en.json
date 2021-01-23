@@ -8,6 +8,6 @@
   "ALWAYSHP.ResourceHint": "Most systems use attributes.hp, but if the system you use doesn't, or if you'd rather use a different property, you can set it here.",
   "ALWAYSHP.DefeatedTitle": "Set defeated status on zero HP",
   "ALWAYSHP.DefeatedHint": "When pressing the button(skull) to drop the HP to zero, also set the defeated status",
-  "ALWAYSHP.GMOnlyTitle": "Only show this for the GM",
-  "ALWAYSHP.GMOnlyHint": "Just in case you'd rather the players not have access to the Always HP Window"
+  "ALWAYSHP.ShowDialogTitle": "Show the Window",
+  "ALWAYSHP.ShowDialogHint": "Just in case you'd rather not see the dialog, if you're on a small display"
 }
