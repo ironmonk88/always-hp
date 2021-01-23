@@ -41,18 +41,20 @@ export class AlwaysHP {
                 let effect = a && status ? status : CONFIG.controlIcons.defeated;
                 const exists = (effect.icon == undefined ? (t.data.overlayEffect == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
                 if (exists != active)
-                    t.toggleEffect(effect, { overlay: true, active: active });
+                    t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
             }
 
             log('applying damage', a, value);
-            if (game.system.id == "dnd5e") {
-                a.applyDamage(value).then(() => {
-                    AlwaysHP.refreshSelected();
-                });
-            } else {
-                AlwaysHP.applyDamage(a, value).then(() => {
-                    AlwaysHP.refreshSelected();
-                });
+            if (value != 0) {
+                if (game.system.id == "dnd5e") {
+                    a.applyDamage(value).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                } else {
+                    AlwaysHP.applyDamage(a, value).then(() => {
+                        AlwaysHP.refreshSelected();
+                    });
+                }
             }
         }));
     }
@@ -149,9 +151,13 @@ export class AlwaysHPApp extends Application {
 
         html.find('#alwayshp-btn-dead').click(ev => {
             ev.preventDefault();
-            log('set character to dead');
-            AlwaysHP.changeHP('zero', true);
-            this.clearInput();
+            if (ev.shiftKey == true)
+                AlwaysHP.changeHP(0, 'toggle');
+            else {
+                log('set character to dead');
+                AlwaysHP.changeHP('zero', true);
+                this.clearInput();
+            }
         }).contextmenu(ev => {
             ev.preventDefault();
             log('set character to hurt');
