@@ -19,12 +19,23 @@ export const registerSettings = function () {
         config: true
     });
 
-    game.settings.register(modulename, "show-dialog", {
-        name: game.i18n.localize("ALWAYSHP.ShowDialogTitle"),
-        hint: game.i18n.localize("ALWAYSHP.ShowDialogHint"),
-        scope: "client",
-        default: true,
+    game.settings.register(modulename, "gm-only", {
+        name: game.i18n.localize("ALWAYSHP.GMOnlyTitle"),
+        hint: game.i18n.localize("ALWAYSHP.GMOnlyHint"),
+        scope: "world",
+        default: false,
         type: Boolean,
         config: true
     });
+
+    if (game.user.isGM || !game.settings.get("always-hp", "gm-only")){
+        game.settings.register(modulename, "show-dialog", {
+            name: game.i18n.localize("ALWAYSHP.ShowDialogTitle"),
+            hint: game.i18n.localize("ALWAYSHP.ShowDialogHint"),
+            scope: "client",
+            default: true,
+            type: Boolean,
+            config: true
+        });
+    }
 }

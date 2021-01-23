@@ -9,5 +9,7 @@
   "ALWAYSHP.DefeatedTitle": "Set defeated status on zero HP",
   "ALWAYSHP.DefeatedHint": "When pressing the button(skull) to drop the HP to zero, also set the defeated status",
   "ALWAYSHP.ShowDialogTitle": "Show the Window",
-  "ALWAYSHP.ShowDialogHint": "Just in case you'd rather not see the dialog, if you're on a small display"
+  "ALWAYSHP.ShowDialogHint": "Just in case you'd rather not see the dialog, if you're on a small display",
+  "ALWAYSHP.GMOnlyTitle": "GM Only",
+  "ALWAYSHP.GMOnlyHint": "Only show the dialog for the Gamesmaster"
 }

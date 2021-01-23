@@ -19,7 +19,7 @@ export class AlwaysHP {
     static init() {
         //CONFIG.debug.hooks = true;
         registerSettings();
-        if (game.settings.get("always-hp", "show-dialog"))
+        if ((game.user.isGM || !game.settings.get("always-hp", "gm-only")) && game.settings.get("always-hp", "show-dialog"))
             AlwaysHP.app = new AlwaysHPApp().render(true);
         log('rendering app');
     }
@@ -174,7 +174,7 @@ export class AlwaysHPApp extends Application {
             ev.preventDefault();
             log('set character to heal');
             let value = this.getValue;
-            if (value != '') AlwaysHP.changeHP(-Math.abs(value));
+            if (value != '') AlwaysHP.changeHP(-Math.abs(value), false);
             this.clearInput();
         }).dblclick(ev => {
             ev.preventDefault();
