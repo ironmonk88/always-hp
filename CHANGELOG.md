@@ -1,7 +1,12 @@
+# Version 1.0.17
+Added shift-click to the skull to toggle dead status.
+Added the ability for the GM to turn off the players dialog.
+Changed it so that any healing will remove the dead status.
+
 # Version 1.0.16
 Added setting so that players can turn off the dialog if they don't wish to see it.
 Added right-click functions to the skull and heart, to change HP without changing the dead status.
-Changed workflow so that skull willl add the dead status and heart will clear it.
+Changed workflow so that skull will add the dead status and heart will clear it.
 
 # Version 1.0.14
 Added option to not set the defeated status when clicking the skull.
