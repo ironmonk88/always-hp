@@ -7,7 +7,7 @@
     box-shadow: 0 0 20px #000;
     border: 1px solid #000;
     position: fixed;
-    z-index: 100;
+    z-index: 29;
     overflow: hidden;
     flex-direction: column;
     display:flex !important;
