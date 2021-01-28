@@ -7,7 +7,7 @@ export const registerSettings = function () {
         scope: "world",
         default: "attributes.hp",
         type: String,
-        config: false
+        config: true
     });
 
     game.settings.register(modulename, "add-defeated", {
@@ -15,6 +15,15 @@ export const registerSettings = function () {
         hint: game.i18n.localize("ALWAYSHP.DefeatedHint"),
         scope: "world",
         default: true,
+        type: Boolean,
+        config: true
+    });
+
+    game.settings.register(modulename, "double-click", {
+        name: game.i18n.localize("ALWAYSHP.AllowDoubleClick"),
+        hint: game.i18n.localize("ALWAYSHP.AllowDoubleClickHint"),
+        scope: "client",
+        default: false,
         type: Boolean,
         config: true
     });

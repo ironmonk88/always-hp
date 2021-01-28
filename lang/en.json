@@ -11,5 +11,7 @@
   "ALWAYSHP.ShowDialogTitle": "Show the Window",
   "ALWAYSHP.ShowDialogHint": "Just in case you'd rather not see the dialog, if you're on a small display",
   "ALWAYSHP.GMOnlyTitle": "GM Only",
-  "ALWAYSHP.GMOnlyHint": "Only show the dialog for the Gamesmaster"
+  "ALWAYSHP.GMOnlyHint": "Only show the dialog for the Gamesmaster",
+  "ALWAYSHP.AllowDoubleClick": "Allow Double-Click",
+  "ALWAYSHP.AllowDoubleClickHint": "Double-clicking the down or up arrows will fully heal or completely drain.  Add this if you can't right click the skull or heart."
 }

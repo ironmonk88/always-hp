@@ -24,17 +24,37 @@ export class AlwaysHP {
         log('rendering app');
     }
 
+    static getResource(actor) {
+        if (actor == undefined) return;
+
+        let resource = game.settings.get("always-hp", "resourcename");
+        if (resource == 'attributes.hp') {
+            return actor.data.data.attributes.hp
+        } else {
+            let parts = resource.split(".");
+            let data = actor.data.data;
+            for (let i = 0; i < parts.length; i++) {
+                if (data[parts[i]] != undefined)
+                    data = data[parts[i]];
+            }
+            return data;
+        }
+    }
+
+    static getValue(resource) {
+        return (resource instanceof Object ? resource.value : resource);
+    }
+
     static changeHP(value, active) {
         //CONFIG.debug.hooks = true;
         return Promise.all(canvas.tokens.controlled.map(t => {
             const a = t.actor; //game.actors.get(t.actor.id);
 
+            let resource = AlwaysHP.getResource(a);
             if (value == 'zero')
-                value = a.data.data.attributes.hp.value;
-            if (value == 'full') {
-                let hp = a.data.data.attributes.hp;
-                value = (hp.value - hp.max);
-            }
+                value = AlwaysHP.getValue(resource);
+            if (value == 'full')
+                value = (resource instanceof Object ? resource.value - resource.max : resource);
 
             if (active != undefined && game.settings.get("always-hp", "add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
@@ -46,7 +66,7 @@ export class AlwaysHP {
 
             log('applying damage', a, value);
             if (value != 0) {
-                if (game.system.id == "dnd5e") {
+                if (game.system.id == "dnd5e" && game.settings.get("always-hp", "resourcename") == 'attributes.hp') {
                     a.applyDamage(value).then(() => {
                         AlwaysHP.refreshSelected();
                     });
@@ -60,22 +80,31 @@ export class AlwaysHP {
     }
 
     static async applyDamage(actor, amount = 0, multiplier = 1) {
-        amount = Math.floor(parseInt(amount) * multiplier);
-        const hp = actor.data.data.attributes.hp;
+        let updates = {};
+        let resourcename = game.settings.get("always-hp", "resourcename");
+        let resource = AlwaysHP.getResource(actor);
+        if (resource instanceof Object) {
+            amount = Math.floor(parseInt(amount) * multiplier);
 
-        // Deduct damage from temp HP first
-        const tmp = parseInt(hp.temp) || 0;
-        const dt = amount > 0 ? Math.min(tmp, amount) : 0;
+            // Deduct damage from temp HP first
+            let dt = 0;
+            let tmpMax = 0;
+            if (resource.temp != undefined) {
+                const tmp = parseInt(resource.temp) || 0;
+                dt = amount > 0 ? Math.min(tmp, amount) : 0;
+                // Remaining goes to health
+                tmpMax = parseInt(hp.tempmax) || 0;
 
-        // Remaining goes to health
-        const tmpMax = parseInt(hp.tempmax) || 0;
-        const dh = Math.clamped(hp.value - (amount - dt), 0, hp.max + tmpMax);
+                updates["data." + resourcename + ".temp"] = tmp - dt;
+            }
 
-        // Update the Actor
-        const updates = {
-            "data.attributes.hp.temp": tmp - dt,
-            "data.attributes.hp.value": dh
-        };
+            // Update the Actor
+            const dh = Math.clamped(resource.value - (amount - dt), 0, resource.max + tmpMax);
+            updates["data." + resourcename + ".value"] = dh;
+        } else {
+            let value = AlwaysHP.getValue(resource);
+            updates["data." + resourcename] = (value - amount);
+        }
 
         return actor.update(updates);
     }
@@ -83,8 +112,12 @@ export class AlwaysHP {
     static refreshSelected() {
         if (canvas.tokens.controlled.length == 0)
             AlwaysHP.selectedtoken = "";
-        else if (canvas.tokens.controlled.length == 1)
-            AlwaysHP.selectedtoken = canvas.tokens.controlled[0].data.name + " [" + canvas.tokens.controlled[0].actor.data.data.attributes.hp.value + "]";
+        else if (canvas.tokens.controlled.length == 1) {
+            let resource = AlwaysHP.getResource(canvas.tokens.controlled[0].actor);
+            let value = AlwaysHP.getValue(resource);
+            
+            AlwaysHP.selectedtoken = canvas.tokens.controlled[0].data.name + " " + (value != undefined ? "[" + value + "]" : '');
+        }
         else
             AlwaysHP.selectedtoken = "Multiple (" + canvas.tokens.controlled.length + ")";
         if(AlwaysHP.app != undefined)
@@ -168,12 +201,7 @@ export class AlwaysHPApp extends Application {
             ev.preventDefault();
             log('set character to hurt');
             let value = this.getValue;
-            if(value != '') AlwaysHP.changeHP(Math.abs(value));
-            this.clearInput();
-        }).dblclick(ev => {
-            ev.preventDefault();
-            log('set character to hurt');
-            AlwaysHP.changeHP('zero');
+            if (value != '') AlwaysHP.changeHP(Math.abs(value));
             this.clearInput();
         });
         html.find('#alwayshp-btn-heal').click(ev => {
@@ -181,11 +209,6 @@ export class AlwaysHPApp extends Application {
             log('set character to heal');
             let value = this.getValue;
             if (value != '') AlwaysHP.changeHP(-Math.abs(value), false);
-            this.clearInput();
-        }).dblclick(ev => {
-            ev.preventDefault();
-            log('set character to heal');
-            AlwaysHP.changeHP('full');
             this.clearInput();
         });
         html.find('#alwayshp-btn-fullheal').click(ev => {
@@ -199,6 +222,22 @@ export class AlwaysHPApp extends Application {
             AlwaysHP.changeHP('full');
             this.clearInput();
         });
+
+        if (game.settings.get('always-hp', 'double-click')) {
+            html.find('#alwayshp-btn-hurt').dblclick(ev => {
+                ev.preventDefault();
+                log('set character to hurt');
+                AlwaysHP.changeHP('zero');
+                this.clearInput();
+            });
+
+            html.find('#alwayshp-btn-heal').dblclick(ev => {
+                ev.preventDefault();
+                log('set character to heal');
+                AlwaysHP.changeHP('full');
+                this.clearInput();
+            });
+        }
         html.find('#alwayshp-hp').focus(ev => {
             ev.preventDefault();
             let elem = ev.target;
