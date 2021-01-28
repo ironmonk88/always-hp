@@ -1,3 +1,7 @@
+# Version 1.0.18
+Added Death saving throws for DnD5e
+Allow other systems than just DnD5e and PF2e by allowing GM's to set the resource that gets changed.
+
 # Version 1.0.17
 Added shift-click to the skull to toggle dead status.
 Added the ability for the GM to turn off the players dialog.
