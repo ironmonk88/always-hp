@@ -13,5 +13,10 @@
   "ALWAYSHP.GMOnlyTitle": "GM Only",
   "ALWAYSHP.GMOnlyHint": "Only show the dialog for the Gamesmaster",
   "ALWAYSHP.AllowDoubleClick": "Allow Double-Click",
-  "ALWAYSHP.AllowDoubleClickHint": "Double-clicking the down or up arrows will fully heal or completely drain.  Add this if you can't right click the skull or heart."
+  "ALWAYSHP.AllowDoubleClickHint": "Double-clicking the down or up arrows will fully heal or completely drain.  Add this if you can't right click the skull or heart.",
+  "ALWAYSHP.ClearSavingThrows": "Clear Death Saving Throws",
+  "ALWAYSHP.ClearSavingThrowsHint": "Clear death saving throws automatically when healed",
+
+  "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
+  "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"
 }

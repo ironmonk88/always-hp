@@ -14,7 +14,7 @@ export let i18n = key => {
 
 export class AlwaysHP {
     static app = null;
-    static selectedtoken = "";
+    //static selectedtoken = "";
 
     static init() {
         //CONFIG.debug.hooks = true;
@@ -64,6 +64,10 @@ export class AlwaysHP {
                     t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
             }
 
+            if (active === false && game.settings.get("always-hp", "clear-savingthrows")) {
+                a.update({ "data.attributes.death.failure": 0, "data.attributes.death.success": 0 });
+            }
+
             log('applying damage', a, value);
             if (value != 0) {
                 if (game.system.id == "dnd5e" && game.settings.get("always-hp", "resourcename") == 'attributes.hp') {
@@ -111,21 +115,36 @@ export class AlwaysHP {
 
     static refreshSelected() {
         if (canvas.tokens.controlled.length == 0)
-            AlwaysHP.selectedtoken = "";
+            AlwaysHP.app.tokenname = "";
         else if (canvas.tokens.controlled.length == 1) {
             let resource = AlwaysHP.getResource(canvas.tokens.controlled[0].actor);
             let value = AlwaysHP.getValue(resource);
             
-            AlwaysHP.selectedtoken = canvas.tokens.controlled[0].data.name + " " + (value != undefined ? "[" + value + "]" : '');
+            AlwaysHP.app.tokenname = canvas.tokens.controlled[0].data.name + " " + (value != undefined ? "[" + value + "]" : '');
         }
         else
-            AlwaysHP.selectedtoken = "Multiple (" + canvas.tokens.controlled.length + ")";
-        if(AlwaysHP.app != undefined)
-            AlwaysHP.app.changeToken(AlwaysHP.selectedtoken);
+            AlwaysHP.app.tokenname = "Multiple (" + canvas.tokens.controlled.length + ")";
+        if (AlwaysHP.app != undefined)
+            AlwaysHP.app.changeToken();
+    }
+
+    static addDeathST(save, value) {
+        if (canvas.tokens.controlled.length == 1) {
+            let prop = canvas.tokens.controlled[0].actor.data.data.attributes.death;
+            prop[save ? 'success' : 'failure'] = Math.max(0, Math.min(3, prop[save ? 'success' : 'failure'] + value));
+
+            let updates = {};
+            updates["data.attributes.death." + (save ? 'success' : 'failure')] = prop[save ? 'success' : 'failure'];
+            canvas.tokens.controlled[0].actor.update(updates);
+
+            if (AlwaysHP.app != undefined)
+                AlwaysHP.app.changeToken();
+        }
     }
 }
 
 export class AlwaysHPApp extends Application {
+    tokenname = '';
 
     static get defaultOptions() {
         const options = super.defaultOptions;
@@ -138,7 +157,7 @@ export class AlwaysHPApp extends Application {
 
     getData() {
         return {
-            selectedtoken: AlwaysHP.selectedtoken
+            tokenname: this.tokenname
         };
     }
 
@@ -164,8 +183,16 @@ export class AlwaysHPApp extends Application {
         let resourcename = game.settings.get('always-hp', 'resourcename');
     }
 
-    changeToken(display) {
-        $('#selected-characters', this.element).html(display);
+    changeToken() {
+        $('#selected-characters', this.element).html(this.tokenname);
+
+        let actor = (canvas.tokens.controlled.length == 1 ? canvas.tokens.controlled[0].actor : null);
+        let showST = (actor != undefined && game.system.id == "dnd5e" && actor.data.data.attributes.hp.value == 0 && actor?.hasPlayerOwner);
+        $('.death-savingthrow', this.element).css({ display: (showST ? 'inline-block' : 'none') });
+        if (showST) {
+            $('.death-savingthrow.fail > div').each(function (idx) { $(this).toggleClass('active', idx < actor.data.data.attributes.death.failure) });
+            $('.death-savingthrow.save > div').each(function (idx) { $(this).toggleClass('active', idx < actor.data.data.attributes.death.success) });
+        }
     }
 
     get getValue() {
@@ -326,6 +353,16 @@ export class AlwaysHPApp extends Application {
                 }
             }
         });
+
+        html.find('.death-savingthrow').click(ev => {
+            ev.preventDefault();
+            log('add death saving throw');
+            AlwaysHP.addDeathST($(ev.currentTarget).hasClass('save'), 1);
+        }).contextmenu(ev => {
+            ev.preventDefault();
+            log('remove death saving throw');
+            AlwaysHP.addDeathST($(ev.currentTarget).hasClass('save'), -1);
+        });
     }
 }
 
@@ -333,7 +370,7 @@ Hooks.on('ready', () => {
     AlwaysHP.init();
 });
 
-Hooks.on('renderAlwaysHPApp', () => {
+Hooks.on('renderAlwaysHPApp', (app, html, options) => {
     if (game.user.data.flags.alwayshp) {
         let pos = game.user.data.flags.alwayshp.alwayshpPos;
         log('setting position', pos);

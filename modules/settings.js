@@ -19,6 +19,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "clear-savingthrows", {
+        name: game.i18n.localize("ALWAYSHP.ClearSavingThrows"),
+        hint: game.i18n.localize("ALWAYSHP.ClearSavingThrowsHint"),
+        scope: "world",
+        default: true,
+        type: Boolean,
+        config: true
+    });
+
     game.settings.register(modulename, "double-click", {
         name: game.i18n.localize("ALWAYSHP.AllowDoubleClick"),
         hint: game.i18n.localize("ALWAYSHP.AllowDoubleClickHint"),
