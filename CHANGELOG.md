@@ -1,3 +1,8 @@
+# Version 1.0.19
+Added Actor update hook to update the always HP bar when any actor changes are made.
+
+Added setting to clear the text box after making a change.  So if you want to keep the last value, you can.
+
 # Version 1.0.18
 Added Death saving throws for DnD5e
 Allow other systems than just DnD5e and PF2e by allowing GM's to set the resource that gets changed.
