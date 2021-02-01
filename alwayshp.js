@@ -24,12 +24,43 @@ export class AlwaysHP {
         log('rendering app');
     }
 
+/*
+getBarAttribute(barName, {alternative}={}) {
+    const attr = alternative || (barName ? this.data[barName].attribute : null);
+    if ( !attr || !this.actor ) return null;
+    let data = getProperty(this.actor.data.data, attr);
+
+    // Single values
+    if ( Number.isFinite(data) ) {
+      return {
+        type: "value",
+        attribute: attr,
+        value: data
+      }
+    }
+
+    // Attribute objects
+    else if ( (typeof data === "object") && ("value" in data) && ("max" in data) ) {
+      data = duplicate(data);
+      return {
+        type: "bar",
+        attribute: attr,
+        value: parseInt(data.value || 0),
+        max: parseInt(data.max || 0)
+      }
+    }
+
+    // Otherwise null
+    return null;
+  }
+*/
+    /*
     static getResource(actor) {
-        if (actor == undefined) return;
+        if (actor == undefined || AlwaysHP.app == undefined) return;
 
         let resource = game.settings.get("always-hp", "resourcename");
         if (resource == 'attributes.hp') {
-            return actor.data.data.attributes.hp
+            return actor.data?.data?.attributes?.hp
         } else {
             let parts = resource.split(".");
             let data = actor.data.data;
@@ -39,7 +70,7 @@ export class AlwaysHP {
             }
             return data;
         }
-    }
+    }*/
 
     static getValue(resource) {
         return (resource instanceof Object ? resource.value : resource);
@@ -50,7 +81,8 @@ export class AlwaysHP {
         return Promise.all(canvas.tokens.controlled.map(t => {
             const a = t.actor; //game.actors.get(t.actor.id);
 
-            let resource = AlwaysHP.getResource(a);
+            let resourcename = (game.settings.get("always-hp", "resourcename") || "attributes.hp");
+            let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(a);
             if (value == 'zero')
                 value = AlwaysHP.getValue(resource);
             if (value == 'full')
@@ -86,7 +118,7 @@ export class AlwaysHP {
     static async applyDamage(actor, amount = 0, multiplier = 1) {
         let updates = {};
         let resourcename = game.settings.get("always-hp", "resourcename");
-        let resource = AlwaysHP.getResource(actor);
+        let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(actor);
         if (resource instanceof Object) {
             amount = Math.floor(parseInt(amount) * multiplier);
 
@@ -114,10 +146,14 @@ export class AlwaysHP {
     }
 
     static refreshSelected() {
+        if (AlwaysHP.app == undefined) return;
+
         if (canvas.tokens.controlled.length == 0)
             AlwaysHP.app.tokenname = "";
         else if (canvas.tokens.controlled.length == 1) {
-            let resource = AlwaysHP.getResource(canvas.tokens.controlled[0].actor);
+            let a = canvas.tokens.controlled[0].actor;
+            let resourcename = game.settings.get("always-hp", "resourcename");
+            let resource = getProperty(a.data, "data." + resourcename);//AlwaysHP.getResource(canvas.tokens.controlled[0].actor);
             let value = AlwaysHP.getValue(resource);
             
             AlwaysHP.app.tokenname = canvas.tokens.controlled[0].data.name + " " + (value != undefined ? "[" + value + "]" : '');
@@ -203,7 +239,8 @@ export class AlwaysHPApp extends Application {
     }
 
     clearInput() {
-        $('#alwayshp-hp', this.element).val('');
+        if (game.settings.get("always-hp", "clear-after-enter"))
+            $('#alwayshp-hp', this.element).val('');
     }
 
     activateListeners(html) {
@@ -291,6 +328,7 @@ export class AlwaysHPApp extends Application {
                 }
             }
         });
+
         html.find('#alwayshp-move-handle').mousedown(ev => {
             ev.preventDefault();
             ev = ev || window.event;
@@ -380,3 +418,12 @@ Hooks.on('renderAlwaysHPApp', (app, html, options) => {
 });
 
 Hooks.on('controlToken', AlwaysHP.refreshSelected);
+
+Hooks.on('updateActor', (actor, data) => {
+    log('Updating actor', actor, data);
+    if (canvas.tokens.controlled.length == 1
+        && canvas.tokens.controlled[0]?.actor.id == actor.id
+        && (getProperty(data, "data.attributes.death") != undefined || getProperty(data, "data." + game.settings.get("always-hp", "resourcename")))) {
+        AlwaysHP.refreshSelected();
+    }
+});

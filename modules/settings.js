@@ -28,6 +28,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "clear-after-enter", {
+        name: game.i18n.localize("ALWAYSHP.ClearAfterTitle"),
+        hint: game.i18n.localize("ALWAYSHP.ClearAfterHint"),
+        scope: "client",
+        default: true,
+        type: Boolean,
+        config: true
+    });
+
     game.settings.register(modulename, "double-click", {
         name: game.i18n.localize("ALWAYSHP.AllowDoubleClick"),
         hint: game.i18n.localize("ALWAYSHP.AllowDoubleClickHint"),
