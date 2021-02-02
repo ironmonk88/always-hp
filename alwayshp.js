@@ -118,7 +118,7 @@ getBarAttribute(barName, {alternative}={}) {
     static async applyDamage(actor, amount = 0, multiplier = 1) {
         let updates = {};
         let resourcename = game.settings.get("always-hp", "resourcename");
-        let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(actor);
+        let resource = getProperty(actor.data, "data." + resourcename); //AlwaysHP.getResource(actor);
         if (resource instanceof Object) {
             amount = Math.floor(parseInt(amount) * multiplier);
 
