@@ -1,3 +1,8 @@
+# Version 1.0.20
+Fixed issues with mass update of tokens.  Due to the nature of some of the changes I'm making I have to wrap a lot of the token updates in an await.  So it leaves an animation of each token updating individually, rather than all at once.  It's annoying but functional.  I'll investigate a solution.
+
+Merged a change (Than you DavidAremaCarretero) to fix a copy and paste error left behind from the 1.0.19 update.
+
 # Version 1.0.19
 Added Actor update hook to update the always HP bar when any actor changes are made.
 
