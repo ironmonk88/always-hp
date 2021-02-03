@@ -76,49 +76,48 @@ getBarAttribute(barName, {alternative}={}) {
         return (resource instanceof Object ? resource.value : resource);
     }
 
-    static changeHP(value, active) {
+    static async changeHP(value, active) {
         //CONFIG.debug.hooks = true;
-        return Promise.all(canvas.tokens.controlled.map(t => {
+        for(let t of canvas.tokens.controlled){
             const a = t.actor; //game.actors.get(t.actor.id);
 
             let resourcename = (game.settings.get("always-hp", "resourcename") || "attributes.hp");
             let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(a);
+            let val = value;
             if (value == 'zero')
-                value = AlwaysHP.getValue(resource);
+                val = AlwaysHP.getValue(resource);
             if (value == 'full')
-                value = (resource instanceof Object ? resource.value - resource.max : resource);
+                val = (resource instanceof Object ? resource.value - resource.max : resource);
 
             if (active != undefined && game.settings.get("always-hp", "add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
                 let effect = a && status ? status : CONFIG.controlIcons.defeated;
                 const exists = (effect.icon == undefined ? (t.data.overlayEffect == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
                 if (exists != active)
-                    t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
+                    await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
             }
 
             if (active === false && game.settings.get("always-hp", "clear-savingthrows")) {
                 a.update({ "data.attributes.death.failure": 0, "data.attributes.death.success": 0 });
             }
 
-            log('applying damage', a, value);
-            if (value != 0) {
+            log('applying damage', a, val);
+            if (val != 0) {
                 if (game.system.id == "dnd5e" && game.settings.get("always-hp", "resourcename") == 'attributes.hp') {
-                    a.applyDamage(value).then(() => {
-                        AlwaysHP.refreshSelected();
-                    });
+                    await a.applyDamage(val);
                 } else {
-                    AlwaysHP.applyDamage(a, value).then(() => {
-                        AlwaysHP.refreshSelected();
-                    });
+                    AlwaysHP.applyDamage(a, val);
                 }
             }
-        }));
+        };
+
+        AlwaysHP.refreshSelected();
     }
 
     static async applyDamage(actor, amount = 0, multiplier = 1) {
         let updates = {};
         let resourcename = game.settings.get("always-hp", "resourcename");
-        let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(actor);
+        let resource = getProperty(actor.data, "data." + resourcename); //AlwaysHP.getResource(actor);
         if (resource instanceof Object) {
             amount = Math.floor(parseInt(amount) * multiplier);
 
@@ -142,7 +141,7 @@ getBarAttribute(barName, {alternative}={}) {
             updates["data." + resourcename] = (value - amount);
         }
 
-        return actor.update(updates);
+        return await actor.update(updates);
     }
 
     static refreshSelected() {
