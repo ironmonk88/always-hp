@@ -1,3 +1,6 @@
+# Version 1.0.21
+Added Japanese translations (Thank you touge)
+
 # Version 1.0.20
 Fixed issues with mass update of tokens.  Due to the nature of some of the changes I'm making I have to wrap a lot of the token updates in an await.  So it leaves an animation of each token updating individually, rather than all at once.  It's annoying but functional.  I'll investigate a solution.
 

@@ -2,13 +2,13 @@
   "name": "always-hp",
   "title": "Always HP",
   "description": "We're always updating HP, add a window to make it easier to adjust that",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "minimumCoreVersion": "0.7.0",
   "compatibleCoreVersion": "0.7.9",
   "author": "Iron Monk, ironmonk88#4075",
   "url": "https://github.com/ironmonk88/always-hp",
-  "manifest": "https://raw.githubusercontent.com/ironmonk88/always-hp/master/module.json",
-  "download": "https://github.com/ironmonk88/always-hp/archive/1.0.20.zip",
+  "manifest": "https://github.com/ironmonk88/always-hp/releases/latest/download/module.json",
+  "download": "https://github.com/ironmonk88/always-hp/archive/1.0.21.zip",
   "esmodules": [
     "alwayshp.js",
     "module/settings.js"
