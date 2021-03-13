@@ -1,4 +1,4 @@
-# Version 1.0.22
+# Version 1.0.23
 Fixed an issue with hp being used as the resource name instead of using the resource that's in the settings.
 
 # Version 1.0.21
