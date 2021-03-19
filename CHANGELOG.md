@@ -1,3 +1,6 @@
+# Version 1.0.24
+Removing all the logging commands
+
 # Version 1.0.23
 Fixed an issue with hp being used as the resource name instead of using the resource that's in the settings.
 

@@ -1,34 +1,34 @@
 {
-  "name": "always-hp",
-  "title": "Always HP",
-  "description": "We're always updating HP, add a window to make it easier to adjust that",
-  "version": "1.0.23",
-  "minimumCoreVersion": "0.7.0",
-  "compatibleCoreVersion": "0.7.9",
-  "author": "Iron Monk, ironmonk88#4075",
-  "url": "https://github.com/ironmonk88/always-hp",
-  "manifest": "https://github.com/ironmonk88/always-hp/releases/latest/download/module.json",
-  "download": "https://github.com/ironmonk88/always-hp/archive/1.0.23.zip",
-  "bugs": "https://github.com/ironmonk88/always-hp/issues",
-	"allowBugReporter": true,
-  "esmodules": [
-    "alwayshp.js",
-    "module/settings.js"
-  ],
-  "styles": [
-    "css/alwayshp.css"
-  ],
-  "packs": [],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    },
-	{
-		"lang": "ja",
-		"name": "日本語",
-		"path": "lang/ja.json"
-	}
-  ]
+	"name": "always-hp",
+	"title": "Always HP",
+	"description": "We're always updating HP, add a window to make it easier to adjust that",
+	"version": "1.0.24",
+	"minimumCoreVersion": "0.7.0",
+	"compatibleCoreVersion": "0.7.9",
+	"author": "Iron Monk, ironmonk88#4075",
+	"esmodules": [
+		"alwayshp.js",
+		"module/settings.js"
+	],
+	"styles": [
+		"css/alwayshp.css"
+	],
+	"packs": [],
+	"languages": [
+		{
+		  "lang": "en",
+		  "name": "English",
+		  "path": "lang/en.json"
+		},
+		{
+			"lang": "ja",
+			"name": "日本語",
+			"path": "lang/ja.json"
+		}
+	],
+	"url": "https://github.com/ironmonk88/always-hp",
+	"manifest": "https://github.com/ironmonk88/always-hp/releases/latest/download/module.json",
+	"download": "https://github.com/ironmonk88/always-hp/archive/1.0.24.zip",
+	"bugs": "https://github.com/ironmonk88/always-hp/issues",
+	"allowBugReporter": true
 }

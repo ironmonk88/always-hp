@@ -21,7 +21,7 @@ export class AlwaysHP {
         registerSettings();
         if ((game.user.isGM || !game.settings.get("always-hp", "gm-only")) && game.settings.get("always-hp", "show-dialog"))
             AlwaysHP.app = new AlwaysHPApp().render(true);
-        log('rendering app');
+        //log('rendering app');
     }
 
 /*
@@ -198,19 +198,19 @@ export class AlwaysHPApp extends Application {
     }
 
     show() {
-        log('showing');
+        //log('showing');
         $(this.element).removeClass('loading').css({ display: 'flex !important' });
     }
 
     setPos(pos) {
-        log('set pos', pos);
+        //log('set pos', pos);
         this.setPosition(pos.left, pos.top);
 
         let elmnt = this.element;
         let xPos = (pos.left) > window.innerWidth ? window.innerWidth - 200 : pos.left;
         let yPos = (pos.top) > window.innerHeight - 20 ? window.innerHeight - 100 : pos.top;
         $(elmnt).css({left:xPos, top:yPos});
-        log('set pos complete', pos);
+        //log('set pos complete', pos);
 
         return this;
     }
@@ -411,7 +411,7 @@ Hooks.on('ready', () => {
 Hooks.on('renderAlwaysHPApp', (app, html, options) => {
     if (game.user.data.flags.alwayshp) {
         let pos = game.user.data.flags.alwayshp.alwayshpPos;
-        log('setting position', pos);
+        //log('setting position', pos);
         AlwaysHP.app.setPos(pos);
     }
     AlwaysHP.app.show();
@@ -420,7 +420,7 @@ Hooks.on('renderAlwaysHPApp', (app, html, options) => {
 Hooks.on('controlToken', AlwaysHP.refreshSelected);
 
 Hooks.on('updateActor', (actor, data) => {
-    log('Updating actor', actor, data);
+    //log('Updating actor', actor, data);
     if (canvas.tokens.controlled.length == 1
         && canvas.tokens.controlled[0]?.actor.id == actor.id
         && (getProperty(data, "data.attributes.death") != undefined || getProperty(data, "data." + game.settings.get("always-hp", "resourcename")))) {
