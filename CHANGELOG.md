@@ -1,3 +1,9 @@
+# Version 1.0.25
+
+changed to using game.system.data.primaryTokenAttribute instead of attribute.hp
+
+Allow DnD3.5 and PF1 to set HP less than 0
+
 # Version 1.0.24
 Removing all the logging commands
 

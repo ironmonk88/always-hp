@@ -11,6 +11,9 @@ export let error = (...args) => console.error("alwayshp | ", ...args);
 export let i18n = key => {
     return game.i18n.localize(key);
 };
+export let setting = key => {
+    return game.settings.get("always-hp", key);
+};
 
 export class AlwaysHP {
     static app = null;
@@ -19,7 +22,7 @@ export class AlwaysHP {
     static init() {
         //CONFIG.debug.hooks = true;
         registerSettings();
-        if ((game.user.isGM || !game.settings.get("always-hp", "gm-only")) && game.settings.get("always-hp", "show-dialog"))
+        if ((game.user.isGM || !setting("gm-only")) && setting("show-dialog"))
             AlwaysHP.app = new AlwaysHPApp().render(true);
         //log('rendering app');
     }
@@ -81,7 +84,7 @@ getBarAttribute(barName, {alternative}={}) {
         for(let t of canvas.tokens.controlled){
             const a = t.actor; //game.actors.get(t.actor.id);
 
-            let resourcename = (game.settings.get("always-hp", "resourcename") || "attributes.hp");
+            let resourcename = (setting("resourcename") || game.system.data.primaryTokenAttribute);
             let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(a);
             let val = value;
             if (value == 'zero')
@@ -89,7 +92,7 @@ getBarAttribute(barName, {alternative}={}) {
             if (value == 'full')
                 val = (resource instanceof Object ? resource.value - resource.max : resource);
 
-            if (active != undefined && game.settings.get("always-hp", "add-defeated")) {
+            if (active != undefined && setting("add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
                 let effect = a && status ? status : CONFIG.controlIcons.defeated;
                 const exists = (effect.icon == undefined ? (t.data.overlayEffect == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
@@ -97,13 +100,13 @@ getBarAttribute(barName, {alternative}={}) {
                     await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
             }
 
-            if (active === false && game.settings.get("always-hp", "clear-savingthrows")) {
+            if (active === false && setting("clear-savingthrows")) {
                 a.update({ "data.attributes.death.failure": 0, "data.attributes.death.success": 0 });
             }
 
             log('applying damage', a, val);
             if (val != 0) {
-                if (game.system.id == "dnd5e" && game.settings.get("always-hp", "resourcename") == 'attributes.hp') {
+                if (game.system.id == "dnd5e" && setting("resourcename") == 'attributes.hp') {
                     await a.applyDamage(val);
                 } else {
                     AlwaysHP.applyDamage(a, val);
@@ -116,7 +119,7 @@ getBarAttribute(barName, {alternative}={}) {
 
     static async applyDamage(actor, amount = 0, multiplier = 1) {
         let updates = {};
-        let resourcename = game.settings.get("always-hp", "resourcename");
+        let resourcename = setting("resourcename");
         let resource = getProperty(actor.data, "data." + resourcename); //AlwaysHP.getResource(actor);
         if (resource instanceof Object) {
             amount = Math.floor(parseInt(amount) * multiplier);
@@ -135,7 +138,7 @@ getBarAttribute(barName, {alternative}={}) {
             }
 
             // Update the Actor
-            const dh = Math.clamped(resource.value - (amount - dt), 0, resource.max + tmpMax);
+            const dh = Math.clamped(resource.value - (amount - dt), (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
             updates["data." + resourcename + ".value"] = dh;
         } else {
             let value = AlwaysHP.getValue(resource);
@@ -152,7 +155,7 @@ getBarAttribute(barName, {alternative}={}) {
             AlwaysHP.app.tokenname = "";
         else if (canvas.tokens.controlled.length == 1) {
             let a = canvas.tokens.controlled[0].actor;
-            let resourcename = game.settings.get("always-hp", "resourcename");
+            let resourcename = setting("resourcename");
             let resource = getProperty(a.data, "data." + resourcename);//AlwaysHP.getResource(canvas.tokens.controlled[0].actor);
             let value = AlwaysHP.getValue(resource);
             
@@ -216,7 +219,7 @@ export class AlwaysHPApp extends Application {
     }
 
     loadSettings() {
-        let resourcename = game.settings.get('always-hp', 'resourcename');
+        //let resourcename = game.settings.get('always-hp', 'resourcename');
     }
 
     changeToken() {

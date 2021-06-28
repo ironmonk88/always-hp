@@ -5,7 +5,7 @@ export const registerSettings = function () {
         name: game.i18n.localize("ALWAYSHP.ResourceTitle"),
         hint: game.i18n.localize("ALWAYSHP.ResourceHint"),
         scope: "world",
-        default: "attributes.hp",
+        default: game.system.data.primaryTokenAttribute,
         type: String,
         config: true
     });
