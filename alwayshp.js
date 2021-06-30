@@ -84,7 +84,7 @@ getBarAttribute(barName, {alternative}={}) {
         for(let t of canvas.tokens.controlled){
             const a = t.actor; //game.actors.get(t.actor.id);
 
-            let resourcename = (setting("resourcename") || game.system.data.primaryTokenAttribute);
+            let resourcename = (setting("resourcename") || game.system.data.primaryTokenAttribute || 'attributes.hp');
             let resource = getProperty(a.data, "data." + resourcename); //AlwaysHP.getResource(a);
             let val = value;
             if (value == 'zero')
@@ -140,12 +140,32 @@ getBarAttribute(barName, {alternative}={}) {
             // Update the Actor
             const dh = Math.clamped(resource.value - (amount - dt), (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
             updates["data." + resourcename + ".value"] = dh;
+
+            //if (setting("add-chatmsg"))
+            //    sendMessage(dh, dt);
         } else {
             let value = AlwaysHP.getValue(resource);
             updates["data." + resourcename] = (value - amount);
+
+            //if (setting("add-chatmsg"))
+            //    sendMessage(dh, dt);
         }
 
         return await actor.update(updates);
+    }
+
+    static sendMessage(dh, dt) {
+        const speaker = ChatMessage.getSpeaker({ user: game.user.id });
+
+        let messageData = {
+            user: game.user.id,
+            speaker: speaker,
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            whisper: ChatMessage.getWhisperRecipients("GM").map(u => u.id),
+            content: `${actor.name} has changed HP by: ${dt + dh}` + (dt != 0 ? `<small><br/>Temporary:${dt}<br/>HP:${dh}</small>` : '')
+        };
+
+        ChatMessage.create(messageData);
     }
 
     static refreshSelected() {

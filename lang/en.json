@@ -18,6 +18,8 @@
   "ALWAYSHP.ClearSavingThrowsHint": "Clear death saving throws automatically when healed",
   "ALWAYSHP.ClearAfterTitle": "Clear After Applying",
   "ALWAYSHP.ClearAfterHint": "CLear the text box after apply damage, uncheck this if you still want to keep the last value entered",
+  "ALWAYSHP.AddChatMsgName": "Add Chat Message",
+  "ALWAYSHP.AddChatMsgHint": "Add Chat Message when HP is changed",
 
   "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
   "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"

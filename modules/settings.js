@@ -5,7 +5,7 @@ export const registerSettings = function () {
         name: game.i18n.localize("ALWAYSHP.ResourceTitle"),
         hint: game.i18n.localize("ALWAYSHP.ResourceHint"),
         scope: "world",
-        default: game.system.data.primaryTokenAttribute,
+        default: game.system.data.primaryTokenAttribute || 'attributes.hp',
         type: String,
         config: true
     });
@@ -53,6 +53,15 @@ export const registerSettings = function () {
         default: false,
         type: Boolean,
         config: true
+    });
+
+    game.settings.register(modulename, "add-chatmsg", {
+        name: game.i18n.localize("ALWAYSHP.AddChatMsgName"),
+        hint: game.i18n.localize("ALWAYSHP.AddChatMsgHint"),
+        scope: "world",
+        default: false,
+        type: Boolean,
+        config: false
     });
 
     if (game.user.isGM || !game.settings.get("always-hp", "gm-only")){

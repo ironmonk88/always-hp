@@ -1,3 +1,7 @@
+# Version 1.0.26
+
+Fixing issues with changes to using primaryTokenAttribute
+
 # Version 1.0.25
 
 changed to using game.system.data.primaryTokenAttribute instead of attribute.hp
