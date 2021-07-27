@@ -18,6 +18,8 @@
   "ALWAYSHP.ClearSavingThrowsHint": "回復したとき、死亡セーヴィング・スローを自動的に初期化します。",
   "ALWAYSHP.ClearAfterTitle": "適用後にクリア",
   "ALWAYSHP.ClearAfterHint": "ダメージの適用後にテキストボックスをクリアします。最後に入力した値を保持したい場合は無効にしてください。",
+  "ALWAYSHP.AddChatMsgName": "チャットに出力",
+  "ALWAYSHP.AddChatMsgHint": "HPが変更されたときにチャットメッセージを出力します",
 
   "ALWAYSHP.DeathSavingThrowFail": "死亡セーヴ/失敗",
   "ALWAYSHP.DeathSavingThrowPass": "死亡セーヴ/成功"
