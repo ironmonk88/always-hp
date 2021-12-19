@@ -1,9 +1,11 @@
+import { i18n } from "../alwayshp.js";
+
 export const registerSettings = function () {
     let modulename = "always-hp";
 
     game.settings.register(modulename, "resourcename", {
-        name: game.i18n.localize("ALWAYSHP.ResourceTitle"),
-        hint: game.i18n.localize("ALWAYSHP.ResourceHint"),
+        name: i18n("ALWAYSHP.resourcename.name"),
+        hint: i18n("ALWAYSHP.resourcename.hint"),
         scope: "world",
         default: game.system.data.primaryTokenAttribute || 'attributes.hp',
         type: String,
@@ -11,8 +13,8 @@ export const registerSettings = function () {
     });
 
     game.settings.register(modulename, "add-defeated", {
-        name: game.i18n.localize("ALWAYSHP.DefeatedTitle"),
-        hint: game.i18n.localize("ALWAYSHP.DefeatedHint"),
+        name: i18n("ALWAYSHP.add-defeated.name"),
+        hint: i18n("ALWAYSHP.add-defeated.hint"),
         scope: "world",
         default: true,
         type: Boolean,
@@ -20,8 +22,8 @@ export const registerSettings = function () {
     });
 
     game.settings.register(modulename, "clear-savingthrows", {
-        name: game.i18n.localize("ALWAYSHP.ClearSavingThrows"),
-        hint: game.i18n.localize("ALWAYSHP.ClearSavingThrowsHint"),
+        name: i18n("ALWAYSHP.clear-savingthrows.name"),
+        hint: i18n("ALWAYSHP.clear-savingthrows.hint"),
         scope: "world",
         default: true,
         type: Boolean,
@@ -29,8 +31,8 @@ export const registerSettings = function () {
     });
 
     game.settings.register(modulename, "clear-after-enter", {
-        name: game.i18n.localize("ALWAYSHP.ClearAfterTitle"),
-        hint: game.i18n.localize("ALWAYSHP.ClearAfterHint"),
+        name: i18n("ALWAYSHP.clear-after-enter.name"),
+        hint: i18n("ALWAYSHP.clear-after-enter.hint"),
         scope: "client",
         default: true,
         type: Boolean,
@@ -38,40 +40,33 @@ export const registerSettings = function () {
     });
 
     game.settings.register(modulename, "double-click", {
-        name: game.i18n.localize("ALWAYSHP.AllowDoubleClick"),
-        hint: game.i18n.localize("ALWAYSHP.AllowDoubleClickHint"),
+        name: i18n("ALWAYSHP.double-click.name"),
+        hint: i18n("ALWAYSHP.double-click.hint"),
         scope: "client",
         default: false,
         type: Boolean,
         config: true
     });
 
+    /*
     game.settings.register(modulename, "gm-only", {
-        name: game.i18n.localize("ALWAYSHP.GMOnlyTitle"),
-        hint: game.i18n.localize("ALWAYSHP.GMOnlyHint"),
+        name: i18n("ALWAYSHP.gm-only.name"),
+        hint: i18n("ALWAYSHP.gm-only.hint"),
         scope: "world",
         default: false,
         type: Boolean,
         config: true
     });
+    */
 
-    game.settings.register(modulename, "add-chatmsg", {
-        name: game.i18n.localize("ALWAYSHP.AddChatMsgName"),
-        hint: game.i18n.localize("ALWAYSHP.AddChatMsgHint"),
-        scope: "world",
-        default: false,
-        type: Boolean,
-        config: false
-    });
-
-    if (game.user.isGM || !game.settings.get("always-hp", "gm-only")){
+    //if (game.user.isGM || !game.settings.get("always-hp", "gm-only")){
         game.settings.register(modulename, "show-dialog", {
-            name: game.i18n.localize("ALWAYSHP.ShowDialogTitle"),
-            hint: game.i18n.localize("ALWAYSHP.ShowDialogHint"),
+            name: i18n("ALWAYSHP.show-dialog.name"),
+            hint: i18n("ALWAYSHP.show-dialog.hint"),
             scope: "client",
             default: true,
             type: Boolean,
-            config: true
+            config: false
         });
-    }
+    //}
 }

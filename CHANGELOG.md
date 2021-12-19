@@ -1,3 +1,12 @@
+# Version 1.0.27
+
+Making sure the module works in v9.
+
+Changed how the entire application is loaded.  Instead of strange class/application hybrid I merged them together as one App.  That uses the core settings to drag the window around.
+I'm hoping this will make it a little more stable and easier to use.
+
+Also added a toggle button to hide/show the window so that's a little more accessible and can be turned on or off as the player sees fit.  That way it can be removed outside of combat and then added back in when combat starts. 
+
 # Version 1.0.26
 
 Fixing issues with changes to using primaryTokenAttribute

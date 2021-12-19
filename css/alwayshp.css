@@ -111,3 +111,17 @@
 .good-ones i {
     color: rgb(77, 208, 225);
 }
+
+#always-hp .window-content {
+    background: none;
+    padding: 2px 0px;
+    border-top: 2px solid #782e22;
+}
+
+#always-hp .window-header > :not(h4) {
+    display: none !important;
+}
+
+#always-hp .window-header #selected-characters span{
+    font-size:12px;
+}
