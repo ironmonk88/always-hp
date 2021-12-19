@@ -333,7 +333,7 @@ Hooks.on('updateActor', (actor, data) => {
     }
 });
 
-Hooks.on('dragEndAlwaysHPApp', (app) => {
+Hooks.on('dragEndAlwaysHP', (app) => {
     game.user.setFlag("always-hp", "alwayshpPos", { left: app.position.left, top: app.position.top });
 })
 
