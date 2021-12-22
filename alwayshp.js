@@ -34,13 +34,15 @@ export class AlwaysHP extends Application {
 
     async _render(force, options) {
         super._render(force, options).then((html) => {
-            $('h4', this.element).append($('<span>').attr('id', 'selected-characters').html(this.tokenname));
+            $('h4', this.element).append($('<div>').attr('id', 'selected-characters').html(this.tokenname));
         });
     }
 
     async close(options) {
-        super.close(options);
-        game.AlwaysHP = null;
+        if (options?.properClose) {
+            super.close(options);
+            game.AlwaysHP = null;
+        }
     }
 
     getData() {
@@ -156,7 +158,7 @@ export class AlwaysHP extends Application {
                 let value = this.getResourceValue(resource);
                 let max = this.getResourceMax(resource);
 
-                this.tokenname = canvas.tokens.controlled[0].data.name + " " + (value != undefined ? "<span>[" + value + (max ? "/" + max : '') + "]</span>" : '');
+                this.tokenname = `<div class="character-name">${canvas.tokens.controlled[0].data.name}</div>` + (value != undefined ? " <span>[" + value + (max ? "/" + max : '') + "]</span>" : '');
             }
         }
         else
@@ -310,7 +312,7 @@ Hooks.on('init', () => {
 });
 
 Hooks.on('ready', () => {
-    if (setting("show-dialog"))
+    if (setting("show-option") == 'on' || (setting("show-option") == 'toggle' && setting("show-dialog")))
         game.AlwaysHP = new AlwaysHP().render(true);
 
     let oldDragMouseUp = Draggable.prototype._onDragMouseUp;
@@ -338,22 +340,24 @@ Hooks.on('dragEndAlwaysHP', (app) => {
 })
 
 Hooks.on("getSceneControlButtons", (controls) => {
-    let tokenControls = controls.find(control => control.name === "token")
-    tokenControls.tools.push({
-        name: "toggledialog",
-        title: "ALWAYSHP.toggledialog",
-        icon: "fas fa-briefcase-medical",
-        toggle: true,
-        active: setting('show-dialog'),
-        onClick: toggled => {
-            game.settings.set('always-hp', 'show-dialog', toggled);
-            if (toggled) {
-                if (!game.AlwaysHP)
-                    game.AlwaysHP = new AlwaysHP().render(true);
-            } else {
-                if (game.AlwaysHP)
-                    game.AlwaysHP.close();
+    if (setting("show-option") == 'toggle') {
+        let tokenControls = controls.find(control => control.name === "token")
+        tokenControls.tools.push({
+            name: "toggledialog",
+            title: "ALWAYSHP.toggledialog",
+            icon: "fas fa-briefcase-medical",
+            toggle: true,
+            active: setting('show-dialog'),
+            onClick: toggled => {
+                game.settings.set('always-hp', 'show-dialog', toggled);
+                if (toggled) {
+                    if (!game.AlwaysHP)
+                        game.AlwaysHP = new AlwaysHP().render(true);
+                } else {
+                    if (game.AlwaysHP)
+                        game.AlwaysHP.close({ properClose: true });
+                }
             }
-        }
-    });
+        });
+    }
 });

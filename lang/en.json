@@ -5,6 +5,10 @@
   "ALWAYSHP.HealFully": "Fully Heal the selected Character",
   "ALWAYSHP.toggledialog": "Toggle AlwaysHP Dialog",
 
+  "ALWAYSHP.alwaysshow": "Always show",
+  "ALWAYSHP.dontshow": "Don't show",
+  "ALWAYSHP.allowtoggle": "Allow toggling",
+
   "ALWAYSHP.resourcename.name": "Resource to change",
   "ALWAYSHP.resourcename.hint": "Most systems use attributes.hp, but if the system you use doesn't, or if you'd rather use a different property, you can set it here.",
   "ALWAYSHP.add-defeated.name": "Set defeated status on zero HP",
@@ -19,6 +23,8 @@
   "ALWAYSHP.clear-savingthrows.hint": "Clear death saving throws automatically when healed",
   "ALWAYSHP.clear-after-enter.name": "Clear After Applying",
   "ALWAYSHP.clear-after-enter.hint": "CLear the text box after apply damage, uncheck this if you still want to keep the last value entered",
+  "ALWAYSHP.show-option.name": "Window Show Options",
+  "ALWAYSHP.show-option.hint": "Change how the Always HP window is shown",
 
   "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
   "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"

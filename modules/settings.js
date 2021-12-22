@@ -3,6 +3,25 @@ import { i18n } from "../alwayshp.js";
 export const registerSettings = function () {
     let modulename = "always-hp";
 
+    const debouncedReload = foundry.utils.debounce(function () { window.location.reload(); }, 100);
+
+    let showoptions = {
+        'on': game.i18n.localize("ALWAYSHP.alwaysshow"),
+        'off': game.i18n.localize("ALWAYSHP.dontshow"),
+        'toggle': game.i18n.localize("ALWAYSHP.allowtoggle"),
+    };
+
+    game.settings.register(modulename, "show-option", {
+        name: game.i18n.localize("ALWAYSHP.show-option.name"),
+        hint: game.i18n.localize("ALWAYSHP.show-option.hint"),
+        scope: "client",
+        config: true,
+        default: "toggle",
+        type: String,
+        choices: showoptions,
+        onChange: debouncedReload
+    });
+
     game.settings.register(modulename, "resourcename", {
         name: i18n("ALWAYSHP.resourcename.name"),
         hint: i18n("ALWAYSHP.resourcename.hint"),

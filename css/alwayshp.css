@@ -118,10 +118,27 @@
     border-top: 2px solid #782e22;
 }
 
+#always-hp .window-title {
+    width:100%;
+}
+
 #always-hp .window-header > :not(h4) {
     display: none !important;
 }
 
-#always-hp .window-header #selected-characters span{
-    font-size:12px;
+#always-hp .window-header #selected-characters {
+    white-space: nowrap;
+    width: 100%;
+}
+
+#always-hp .window-header #selected-characters .character-name {
+    max-width: calc(100% - 40px);
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display: inline-block;
+}
+
+#always-hp .window-header #selected-characters span {
+    font-size: 12px;
+    vertical-align:top;
 }

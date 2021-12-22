@@ -1,3 +1,11 @@
+# Version 1.0.29
+
+Fixed an issue where hitting the escape key was closing the window
+
+Fixed an issue where incredibly long token names were hiding the HP
+
+Added the option to show, hide and toggle the window.
+
 # Version 1.0.27
 
 Making sure the module works in v9.
