@@ -1,8 +1,14 @@
 ﻿{
+  "Localization Provided By": "touge",
   "ALWAYSHP.SetToDead": "キャラクターを死亡させる",
   "ALWAYSHP.HurtCharacter": "選択キャラクターにダメージ",
   "ALWAYSHP.HealCharacter": "選択キャラクターを回復",
   "ALWAYSHP.HealFully": "選択キャラクターを完全回復",
+  "ALWAYSHP.toggledialog": "AlwaysHPのダイアログ切り替え",
+
+  "ALWAYSHP.alwaysshow": "常に表示",
+  "ALWAYSHP.dontshow": "表示しない",
+  "ALWAYSHP.allowtoggle": "切り替え許可",
 
   "ALWAYSHP.resourcename.name": "リソースの設定",
   "ALWAYSHP.resourcename.hint": "ほとんどのシステムでは“attributes.hp”を使用します。そうでない場合や、別のプロパティを使用する場合はここで設定してください。",
@@ -18,6 +24,8 @@
   "ALWAYSHP.clear-savingthrows.hint": "回復したとき、死亡セーヴィング・スローを自動的に初期化します。",
   "ALWAYSHP.clear-after-enter.name": "適用後にクリア",
   "ALWAYSHP.clear-after-enter.hint": "ダメージの適用後にテキストボックスをクリアします。最後に入力した値を保持したい場合は無効にしてください。",
+  "ALWAYSHP.show-option.name": "ウィンドウ表示オプション",
+  "ALWAYSHP.show-option.hint": "Always HPのウィンドウ表示方法を設定します。",
 
   "ALWAYSHP.DeathSavingThrowFail": "死亡セーヴ/失敗",
   "ALWAYSHP.DeathSavingThrowPass": "死亡セーヴ/成功"
