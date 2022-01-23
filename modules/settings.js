@@ -11,6 +11,22 @@ export const registerSettings = function () {
         'toggle': game.i18n.localize("ALWAYSHP.allowtoggle"),
     };
 
+    let loadoptions = {
+        'everyone': game.i18n.localize("ALWAYSHP.everyone"),
+        'gm': game.i18n.localize("ALWAYSHP.gm"),
+        'players': game.i18n.localize("ALWAYSHP.players"),
+    };
+
+    game.settings.register(modulename, "load-option", {
+        name: game.i18n.localize("ALWAYSHP.load-option.name"),
+        scope: "world",
+        config: true,
+        default: "everyone",
+        type: String,
+        choices: loadoptions,
+        onChange: debouncedReload
+    });
+
     game.settings.register(modulename, "show-option", {
         name: game.i18n.localize("ALWAYSHP.show-option.name"),
         hint: game.i18n.localize("ALWAYSHP.show-option.hint"),
