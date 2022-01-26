@@ -1,3 +1,15 @@
+# Version 1.0.30
+
+Added the HP bar for individually selected tokens, that also includes temporary hitpoints and changes colour to reflect the colours Foundry uses.
+
+Changed how the HP and Temp HP is displayed.
+
+Changed how the number of multiple tokens selected is shown.
+
+Fixed an issue where selecting the token to go to zero wasn't taking temporary hitpoints into account
+
+Added the options to change temporary hitpoints, or change regular hitpoints without disturbing temporary ones.  Using `+t5` you can add 5 temporary hitpoints, and using `-r10` you can subtract 10 regular hitpoints without affecting the temporary ones.
+
 # Version 1.0.29
 
 Fixed an issue where hitting the escape key was closing the window
