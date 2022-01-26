@@ -4,18 +4,23 @@
   "ALWAYSHP.HurtCharacter": "選択キャラクターにダメージ",
   "ALWAYSHP.HealCharacter": "選択キャラクターを回復",
   "ALWAYSHP.HealFully": "選択キャラクターを完全回復",
-  "ALWAYSHP.toggledialog": "AlwaysHPのダイアログ切り替え",
-
+  "ALWAYSHP.toggledialog": "Always HPの切換",
+  "ALWAYSHP.Multiple": "複数選択",
+ 
   "ALWAYSHP.alwaysshow": "常に表示",
   "ALWAYSHP.dontshow": "表示しない",
-  "ALWAYSHP.allowtoggle": "切り替え許可",
+  "ALWAYSHP.allowtoggle": "切替を許可する",
 
-  "ALWAYSHP.resourcename.name": "リソースの設定",
+  "ALWAYSHP.everyone": "全員",
+  "ALWAYSHP.gm": "GMのみ",
+  "ALWAYSHP.players": "プレイヤーのみ",
+
+  "ALWAYSHP.resourcename.name": "リソースの変更",
   "ALWAYSHP.resourcename.hint": "ほとんどのシステムでは“attributes.hp”を使用します。そうでない場合や、別のプロパティを使用する場合はここで設定してください。",
-  "ALWAYSHP.add-defeated.name": "HP0で敗北ステータスをつける",
-  "ALWAYSHP.add-defeated.hint": "ドクロボタンを押してHPを0にしたとき、合わせて敗北ステータスを付与します。",
+  "ALWAYSHP.add-defeated.name": "HP0で敗北フラグをつける",
+  "ALWAYSHP.add-defeated.hint": "ドクロボタンを押してHPを0にしたとき、合わせて敗北フラグを付与します。",
   "ALWAYSHP.show-dialog.name": "ウィンドウを表示",
-  "ALWAYSHP.show-dialog.hint": "小さなディスプレイでは、ダイアログは見たくないかもしれません。念のため。",
+  "ALWAYSHP.show-dialog.hint": "小さなディスプレイではウィンドウは邪魔かもしれません。念のため。",
   "ALWAYSHP.gm-only.name": "GMのみ",
   "ALWAYSHP.gm-only.hint": "ゲームマスターのみにダイアログを表示します。",
   "ALWAYSHP.double-click.name": "ダブルクリックを許可する",
@@ -24,8 +29,9 @@
   "ALWAYSHP.clear-savingthrows.hint": "回復したとき、死亡セーヴィング・スローを自動的に初期化します。",
   "ALWAYSHP.clear-after-enter.name": "適用後にクリア",
   "ALWAYSHP.clear-after-enter.hint": "ダメージの適用後にテキストボックスをクリアします。最後に入力した値を保持したい場合は無効にしてください。",
-  "ALWAYSHP.show-option.name": "ウィンドウ表示オプション",
-  "ALWAYSHP.show-option.hint": "Always HPのウィンドウ表示方法を設定します。",
+  "ALWAYSHP.show-option.name": "ウィンドウ表示設定",
+  "ALWAYSHP.show-option.hint": "ウィンドウの表示方法を変更します。",
+  "ALWAYSHP.load-option.name": "使用者の設定",
 
   "ALWAYSHP.DeathSavingThrowFail": "死亡セーヴ/失敗",
   "ALWAYSHP.DeathSavingThrowPass": "死亡セーヴ/成功"
