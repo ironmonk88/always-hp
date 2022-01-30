@@ -44,7 +44,7 @@ export class AlwaysHP extends Application {
             $('h4', this.element)
                 .addClass('flexrow')
                 .append($('<div>').addClass('character-name').html(this.tokenname))
-                .append($('<div>').addClass('token-stats flexrow').attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat">${this.tokenstat}</div>` : '')));
+                .append($('<div>').addClass('token-stats flexrow').attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : '')));
             delete ui.windows[that.appId];
         });
     }
@@ -126,7 +126,7 @@ export class AlwaysHP extends Application {
             // Deduct damage from temp HP first
             let dt = 0;
             let tmpMax = 0;
-            if (resource.temp != undefined) {
+            if (resource.hasOwnProperty("temp")) {
                 const tmp = parseInt(resource.temp) || 0;
                 dt = (value > 0 || target == 'temp') && target != 'regular' ? Math.min(tmp, value) : 0;
                 // Remaining goes to health
@@ -228,7 +228,7 @@ export class AlwaysHP extends Application {
 
     changeToken() {
         $('.character-name', this.element).html(this.tokenname);
-        $('.token-stats', this.element).attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat">${this.tokenstat}</div>` : ''));
+        $('.token-stats', this.element).attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : ''));
 
         let actor = (canvas.tokens.controlled.length == 1 ? canvas.tokens.controlled[0].actor : null);
         let showST = (actor != undefined && game.system.id == "dnd5e" && actor.data.data.attributes.hp.value == 0 && actor?.hasPlayerOwner);

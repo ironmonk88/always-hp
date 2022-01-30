@@ -1,3 +1,9 @@
+# Version 1.0.31
+
+Fixed issue where you weren't able to set the temp hp if the temp hp hadn't been set yet.
+
+Changed background colour of stat to match the HP colour.
+
 # Version 1.0.30
 
 Added the HP bar for individually selected tokens, that also includes temporary hitpoints and changes colour to reflect the colours Foundry uses.
