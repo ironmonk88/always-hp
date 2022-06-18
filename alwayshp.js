@@ -71,7 +71,7 @@ export class AlwaysHP extends Application {
     }
 
     getResValue(resource, property = "value", defvalue = null) {
-        return (resource instanceof Object ? resource[property] : defvalue);
+        return (resource instanceof Object ? resource[property] : defvalue) ?? 0;
     }
 
     async changeHP(value, active) {
@@ -107,7 +107,7 @@ export class AlwaysHP extends Application {
                 //if (game.system.id == "dnd5e" && setting("resourcename") == 'attributes.hp') {
                 //    await a.applyDamage(value);
                 //} else {
-                    await this.applyDamage(a, value);
+                    await this.applyDamage(t, value);
                 //}
             }
         };
@@ -115,7 +115,8 @@ export class AlwaysHP extends Application {
         this.refreshSelected();
     }
 
-    async applyDamage(actor, amount, multiplier = 1) {
+    async applyDamage(token, amount, multiplier = 1) {
+        let actor = token.actor;
         let { value, target } = amount;
         let updates = {};
         let resourcename = (setting("resourcename") || game.system.data.primaryTokenAttribute || 'attributes.hp');
@@ -124,22 +125,37 @@ export class AlwaysHP extends Application {
             value = Math.floor(parseInt(value) * multiplier);
 
             // Deduct damage from temp HP first
-            let dt = 0;
-            let tmpMax = 0;
-            if (resource.hasOwnProperty("temp")) {
-                const tmp = parseInt(resource.temp) || 0;
-                dt = (value > 0 || target == 'temp') && target != 'regular' ? Math.min(tmp, value) : 0;
-                // Remaining goes to health
+            if (resource.hasOwnProperty("tempmax") && target == "max") {
+                const dm = (resource.tempmax ?? 0) - value;
+                updates["data." + resourcename + ".tempmax"] = dm;
+            } else {
+                let dt = 0;
+                let tmpMax = 0;
+                if (resource.hasOwnProperty("temp")) {
+                    const tmp = parseInt(resource.temp) || 0;
+                    dt = (value > 0 || target == 'temp') && target != 'regular' && target != 'max' ? Math.min(tmp, value) : 0;
+                    // Remaining goes to health
 
-                tmpMax = parseInt(resource.tempmax) || 0;
+                    tmpMax = parseInt(resource.tempmax) || 0;
 
-                updates["data." + resourcename + ".temp"] = tmp - dt;
-            }
+                    updates["data." + resourcename + ".temp"] = tmp - dt;
+                }
 
-            // Update the Actor
-            if (target != 'temp' && dt >= 0) {
-                const dh = Math.clamped(resource.value - (value - dt), (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
-                updates["data." + resourcename + ".value"] = dh;
+                // Update the Actor
+                if (target != 'temp' && target != 'max' && dt >= 0) {
+                    let change = (value - dt);
+                    const dh = Math.clamped(resource.value - change, (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
+                    updates["data." + resourcename + ".value"] = dh;
+
+                    token.hud.createScrollingText((-change).signedString(), {
+                        anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
+                        fontSize: 32,
+                        fill: (change > 0 ? 16711680 : 65280),
+                        stroke: 0x000000,
+                        strokeThickness: 4,
+                        jitter: 0.25
+                    });
+                }
             }
         } else {
             let val = Math.floor(parseInt(resource));
@@ -256,6 +272,10 @@ export class AlwaysHP extends Application {
             result.target = "temp";
             result.value = result.value.replace('t', '').replace('T', '');
         }
+        if (value.indexOf("m") > -1 || value.indexOf("M") > -1) {
+            result.target = "max";
+            result.value = result.value.replace('m', '').replace('M', '');
+        }
 
         result.value = parseInt(result.value);
         if (isNaN(result.value))
@@ -266,6 +286,26 @@ export class AlwaysHP extends Application {
     clearInput() {
         if (setting("clear-after-enter"))
             $('#alwayshp-hp', this.element).val('');
+    }
+
+    getChangeValue(perc) {
+        let change = "";
+        if (canvas.tokens.controlled.length == 1) {
+            const actor = canvas.tokens.controlled[0].actor;
+
+            let resourcename = (setting("resourcename") || game.system.data.primaryTokenAttribute || 'attributes.hp');
+            let resource = getProperty(actor.data, "data." + resourcename);
+
+            if (resource.hasOwnProperty("max")) {
+                let max = this.getResValue(resource, "max");
+                let tempmax = this.getResValue(resource, "tempmax");
+                const effectiveMax = Math.max(0, max + tempmax);
+                let val = Math.floor(parseInt(effectiveMax * perc));
+                change = val - Math.floor(parseInt(resource.value));
+            }
+        }
+
+        return change;
     }
 
     activateListeners(html) {
@@ -371,6 +411,24 @@ export class AlwaysHP extends Application {
             ev.preventDefault();
             log('remove death saving throw');
             this.addDeathST($(ev.currentTarget).hasClass('save'), -1);
+        });
+
+        
+        html.find('.resource').mousemove(ev => {
+            if (!setting("allow-bar-click"))
+                return;
+            let perc = ev.offsetX / $(ev.currentTarget).width();
+            let change = this.getChangeValue(perc);
+
+            $('.bar-change', html).html(change);
+        }).click(ev => {
+            if (!setting("allow-bar-click"))
+                return;
+            let perc = ev.offsetX / $(ev.currentTarget).width();
+            let change = this.getChangeValue(perc);
+
+            this.changeHP({ value: -change, target: 'regular' });
+            $('.bar-change', html).html('');
         });
     }
 }

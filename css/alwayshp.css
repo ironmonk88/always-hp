@@ -198,6 +198,20 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+#always-hp .resource .bar-change {
+    display: none;
+    width: 75px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+#always-hp .resource:hover .bar-change {
+    display: inline-block;
+}
+
 #always-hp .resource .temp-bar {
     background-color: #66ccff;
     border-radius: 2px;

@@ -1,3 +1,13 @@
+# Version 1.0.33
+
+Fixed issue getting resource value when the system doesn't support the value
+
+Added the option to adjust temporary max hp by using the 'm' attribute.  So `+m10` will add 10 max HP.
+
+Added scrolling HP numbers when the value changes.
+
+Added the option to make the HP bar reactive.  So hovering over the bar will show you what the value would change to if you clicked, and clicking the bar will change the value to that point.
+
 # Version 1.0.31
 
 Fixed issue where you weren't able to set the temp hp if the temp hp hadn't been set yet.

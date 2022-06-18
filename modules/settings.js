@@ -83,6 +83,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "allow-bar-click", {
+        name: i18n("ALWAYSHP.allow-bar-click.name"),
+        hint: i18n("ALWAYSHP.allow-bar-click.hint"),
+        scope: "client",
+        default: false,
+        type: Boolean,
+        config: true
+    });
+
     /*
     game.settings.register(modulename, "gm-only", {
         name: i18n("ALWAYSHP.gm-only.name"),
