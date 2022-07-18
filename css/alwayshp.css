@@ -116,6 +116,7 @@
     background: none;
     padding: 2px 0px;
     border-top: 2px solid #782e22;
+    overflow-y: hidden;
 }
 
 #always-hp .window-title {
@@ -158,8 +159,12 @@
     height: 20px;
 }
 
+#always-hp.minimized .window-header .token-stats {
+    margin-top: 4px;
+}
+
 #always-hp .window-header .token-stats:empty {
-    display:none;
+    display: none;
 }
 
 #always-hp .window-header .token-stats .stat {

@@ -1,3 +1,7 @@
+# Version 1.0.34
+
+Adding support for v10
+
 # Version 1.0.33
 
 Fixed issue getting resource value when the system doesn't support the value
