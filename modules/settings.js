@@ -42,7 +42,7 @@ export const registerSettings = function () {
         name: i18n("ALWAYSHP.resourcename.name"),
         hint: i18n("ALWAYSHP.resourcename.hint"),
         scope: "world",
-        default: game.system.primaryTokenAttribute || 'attributes.hp',
+        default: (game.system.primaryTokenAttribute ?? game.system.data?.primaryTokenAttribute)  || 'attributes.hp',
         type: String,
         config: true
     });
