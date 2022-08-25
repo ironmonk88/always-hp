@@ -203,6 +203,7 @@ export class AlwaysHP extends Application {
         this.tokentemp = "";
         this.tokentooltip = "";
         let dataname = (isNewerVersion(game.version, "9.9999") ? "system." : "data.");
+        $('.character-name', this.element).removeClass("single");
         if (canvas.tokens.controlled.length == 0)
             this.tokenname = "";
         else if (canvas.tokens.controlled.length == 1) {
@@ -210,6 +211,7 @@ export class AlwaysHP extends Application {
             if (!a)
                 this.tokenname = "";
             else {
+                $('.character-name', this.element).addClass("single");
                 let resourcename = setting("resourcename");
                 let resource = getProperty((isNewerVersion(game.version, "9.9999") ? a : a.data), dataname + resourcename);
 
@@ -445,6 +447,7 @@ export class AlwaysHP extends Application {
             let change = this.getChangeValue(perc);
 
             $('.bar-change', html).html(change);
+            log("resource change");
         }).click(ev => {
             if (!setting("allow-bar-click"))
                 return;
@@ -453,6 +456,12 @@ export class AlwaysHP extends Application {
 
             this.changeHP({ value: -change, target: 'regular' });
             $('.bar-change', html).html('');
+        });
+
+        html.find('.bar-change').mousemove(ev => {
+            ev.preventDefault;
+            ev.stopPropagation();
+            log("bar change");
         });
     }
 }

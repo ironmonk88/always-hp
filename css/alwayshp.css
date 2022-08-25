@@ -137,6 +137,10 @@
     height: 100%;
 }
 
+#always-hp .window-header .character-name.single {
+    line-height: 24px;
+}
+
 #always-hp .window-header .character-name .count {
     display: inline-block;
     padding: 0.25em 0.4em;
@@ -209,8 +213,12 @@
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    margin-top: 8px;
     overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 14px;
+    margin-left: -37px;
 }
 
 #always-hp .resource:hover .bar-change {
@@ -224,4 +232,14 @@
     top: 1px;
     left: 1px;
     height: 4px;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }

@@ -1,3 +1,9 @@
+# Version 1.0.38
+
+Fixing issues with changing the hp via the mouse over the bar.
+
+Adding some styling changes
+
 # Version 1.0.34
 
 Adding support for v10
