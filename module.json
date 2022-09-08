@@ -6,20 +6,27 @@
     {
       "name": "IronMonk",
       "discord": "ironmonk88#4075",
-      "patreon": "https://www.patreon.com/ironmonk",
-      "ko-fi": "https://ko-fi.com/ironmonk88"
+      "flags": {}
     }
   ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     },
     {
       "lang": "ja",
       "name": "日本語",
-      "path": "lang/ja.json"
+      "path": "lang/ja.json",
+      "flags": {}
+    },    
+    {
+      "lang": "pl",
+      "name": "Polish",
+      "path": "lang/pl.json",
+      "flags": {}
     }
   ],
   "esmodules": [
@@ -32,13 +39,8 @@
   "download": "https://github.com/ironmonk88/always-hp/archive/1.0.38.zip",
   "manifest": "https://github.com/ironmonk88/always-hp/releases/latest/download/module.json",
   "bugs": "https://github.com/ironmonk88/always-hp/issues",
-  "allowBugReporter": true,
   "id": "always-hp",
   "compatibility": {
-    "minimum": "9",
-    "verified": "10"
-  },
-  "name": "always-hp",
-  "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "10"
+    "minimum": "9"
+  }
 }
