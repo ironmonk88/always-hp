@@ -92,7 +92,7 @@ export class AlwaysHP extends Application {
                 value.value = (resource instanceof Object ? resource.value - resource.max : resource);
 
             if (active != undefined && setting("add-defeated")) {
-                let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
+                let status = CONFIG.statusEffects.find(e => e.id === CONFIG.specialStatusEffects.DEFEATED);
                 let effect = a && status ? status : CONFIG.controlIcons.defeated;
                 let overlay = (isNewerVersion(game.version, "9.9999") ? t.document.overlayEffect : t.data.overlayEffect);
                 const exists = (effect.icon == undefined ? (overlay == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
@@ -489,7 +489,7 @@ Hooks.on('updateActor', (actor, data) => {
     //log('Updating actor', actor, data);
     let dataname = (isNewerVersion(game.version, "9.9999") ? "system." : "data.");
     if (canvas.tokens.controlled.length == 1
-        && canvas.tokens.controlled[0]?.actor.id == actor.id
+        && canvas.tokens.controlled[0]?.actor?.id == actor.id
         && (getProperty(data, dataname + "attributes.death") != undefined || getProperty(data, dataname + setting("resourcename")))) {
         game.AlwaysHP?.refreshSelected();
     }

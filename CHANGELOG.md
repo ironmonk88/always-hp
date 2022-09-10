@@ -1,3 +1,9 @@
+# Version 10.1
+
+Fixed issues detecting when a token is defeated
+
+Fixed an issue when a controlled token doesn't have an actor.
+
 # Version 1.0.38
 
 Fixing issues with changing the hp via the mouse over the bar.
