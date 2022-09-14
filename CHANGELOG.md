@@ -1,3 +1,9 @@
+# Version 10.2
+
+Fixing a bug with the defeated status that was preventing a token from healing.
+
+Added the option to change what AlwaysHP does with an unsigned value.  Currently a number without a + or minus is treate as negative and will hurt the token.  You can now change it so it will assume healing instead.
+
 # Version 10.1
 
 Fixed issues detecting when a token is defeated

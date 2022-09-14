@@ -33,6 +33,8 @@
   "ALWAYSHP.load-option.name": "Load Option",
   "ALWAYSHP.allow-bar-click.name": "Allow Bar Click",
   "ALWAYSHP.allow-bar-click.hint": "Hover over and click on the HP bar to alter the attribute",
+  "ALWAYSHP.no-sign-negative.name": "No sign means negative",
+  "ALWAYSHP.no-sign-negative.hint": "If no + or - is added, Always HP assumes negative",
 
   "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
   "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"

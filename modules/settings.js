@@ -47,6 +47,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "no-sign-negative", {
+        name: i18n("ALWAYSHP.no-sign-negative.name"),
+        hint: i18n("ALWAYSHP.no-sign-negative.hint"),
+        scope: "client",
+        default: true,
+        type: Boolean,
+        config: true
+    });
+
     game.settings.register(modulename, "add-defeated", {
         name: i18n("ALWAYSHP.add-defeated.name"),
         hint: i18n("ALWAYSHP.add-defeated.hint"),
