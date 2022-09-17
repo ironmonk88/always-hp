@@ -1,3 +1,7 @@
+# Version 10.3
+
+Fixing a bug, detecting if it's v10 or not.
+
 # Version 10.2
 
 Fixing a bug with the defeated status that was preventing a token from healing.
