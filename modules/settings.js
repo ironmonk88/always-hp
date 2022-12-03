@@ -1,4 +1,4 @@
-import { i18n } from "../alwayshp.js";
+import { i18n, setting } from "../alwayshp.js";
 
 export const registerSettings = function () {
     let modulename = "always-hp";
@@ -9,6 +9,8 @@ export const registerSettings = function () {
         'on': game.i18n.localize("ALWAYSHP.alwaysshow"),
         'off': game.i18n.localize("ALWAYSHP.dontshow"),
         'toggle': game.i18n.localize("ALWAYSHP.allowtoggle"),
+        'token': game.i18n.localize("ALWAYSHP.token"),
+        'combat': game.i18n.localize("ALWAYSHP.combat"),
     };
 
     let loadoptions = {
@@ -35,7 +37,14 @@ export const registerSettings = function () {
         default: "toggle",
         type: String,
         choices: showoptions,
-        onChange: debouncedReload
+        onChange: (value) => {
+            let show = true;
+            if (value == "off") show = false;
+            else if (value == "toggled") show = setting("show-dialog")
+            else if (value == "token") show = canvas.tokens.controlled.length;
+            else if (value == "combat") show = game.combats.active && game.combats.active.started;
+            game.AlwaysHP.toggleApp(show);
+        }
     });
 
     game.settings.register(modulename, "resourcename", {

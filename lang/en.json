@@ -9,6 +9,8 @@
   "ALWAYSHP.alwaysshow": "Always show",
   "ALWAYSHP.dontshow": "Don't show",
   "ALWAYSHP.allowtoggle": "Allow toggling",
+  "ALWAYSHP.token": "When token selected",
+  "ALWAYSHP.combat": "Combat only",
 
   "ALWAYSHP.everyone": "Everyone",
   "ALWAYSHP.gm": "GM Only",

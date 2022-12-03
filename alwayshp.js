@@ -51,13 +51,14 @@ export class AlwaysHP extends Application {
                 .append($('<div>').addClass('token-stats flexrow').attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : '')));
             delete ui.windows[that.appId];
             this.refreshSelected();
+            $('#alwayshp-hp').focus();
         });
     }
 
     async close(options) {
         if (options?.properClose) {
             super.close(options);
-            game.AlwaysHP = null;
+            game.AlwaysHP.app = null;
         }
     }
 
@@ -86,22 +87,25 @@ export class AlwaysHP extends Application {
             if (!a)
                 continue;
 
+            let tValue = duplicate(value);
+
             let dataname = (isV10() ? "system." : "data.");
             let resourcename = (setting("resourcename") || (game.system?.primaryTokenAttribute ?? game.data?.primaryTokenAttribute) || 'attributes.hp');
             let resource = getProperty(isV10() ? a : a.data, dataname + resourcename);
 
-            if (value.value == 'zero')
-                value.value = this.getResValue(resource, "value", resource) + this.getResValue(resource, "temp");
+            if (tValue.value == 'zero')
+                tValue.value = this.getResValue(resource, "value", resource) + this.getResValue(resource, "temp");
             if (value.value == 'full')
-                value.value = (resource instanceof Object ? resource.value - resource.max : resource);
+                tValue.value = (resource instanceof Object ? resource.value - resource.max : resource);
 
             let defeatedStatus = (isV10() ? CONFIG.specialStatusEffects.DEFEATED : CONFIG.Combat.defeatedStatusId);
 
             if (active != undefined && setting("add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === defeatedStatus);
-                let effect = a && status ? status : CONFIG.controlIcons.defeated;
+                let effect = game.system.id == "pf2e" ? game.settings.get("pf2e", "deathIcon") : a && status ? status : CONFIG.controlIcons.defeated;
                 let overlay = (isV10() ? t.document.overlayEffect : t.data.overlayEffect);
                 const exists = (effect.icon == undefined ? (overlay == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
+
                 if (exists != active)
                     await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
             }
@@ -112,12 +116,12 @@ export class AlwaysHP extends Application {
                     : { "data.attributes.death.failure": 0, "data.attributes.death.success": 0 });
             }
 
-            log('applying damage', a, value);
-            if (value.value != 0) {
+            log('applying damage', a, tValue);
+            if (tValue.value != 0) {
                 //if (game.system.id == "dnd5e" && setting("resourcename") == 'attributes.hp') {
                 //    await a.applyDamage(value);
                 //} else {
-                    await this.applyDamage(t, value);
+                await this.applyDamage(t, tValue);
                 //}
             }
         };
@@ -278,7 +282,7 @@ export class AlwaysHP extends Application {
         let data = (isV10() ? actor?.system : actor?.data?.data);
         let showST = (actor != undefined && game.system.id == "dnd5e" && data?.attributes.hp.value == 0 && actor?.hasPlayerOwner);
         $('.death-savingthrow', this.element).css({ display: (showST ? 'inline-block' : 'none') });
-        if (showST) {
+        if (showST && data.attributes.death) {
             $('.death-savingthrow.fail > div', this.element).each(function (idx) { $(this).toggleClass('active', idx < data.attributes.death.failure) });
             $('.death-savingthrow.save > div', this.element).each(function (idx) { $(this).toggleClass('active', idx < data.attributes.death.success) });
         }
@@ -477,8 +481,27 @@ Hooks.on('init', () => {
 });
 
 Hooks.on('ready', () => {
+    game.AlwaysHP = {
+        app: null,
+        toggleApp: (show = 'toggle') => {
+            if (show == 'toggle') show = !game.AlwaysHP.app;
+
+            if (show && !game.AlwaysHP.app) {
+                game.AlwaysHP.app = new AlwaysHP().render(true);
+                window.setTimeout(() => { $('#alwayshp-hp').focus(); }, 100);
+            } else if (!show && game.AlwaysHP.app)
+                game.AlwaysHP.app.close({ properClose: true });
+        },
+        refresh: () => {
+            if (game.AlwaysHP.app)
+                game.AlwaysHP.app.refreshSelected();
+        }
+    };
     if ((setting("show-option") == 'on' || (setting("show-option") == 'toggle' && setting("show-dialog"))) && (setting("load-option") == 'everyone' || (setting("load-option") == 'gm' == game.user.isGM)))
-        game.AlwaysHP = new AlwaysHP().render(true);
+        game.AlwaysHP.toggleApp(true);
+
+    if (setting("show-option") == "combat" && game.combats.active && game.combats.active.started && !game.AlwaysHP)
+        game.AlwaysHP.toggleApp(true);
 
     let oldDragMouseUp = Draggable.prototype._onDragMouseUp;
     Draggable.prototype._onDragMouseUp = function (event) {
@@ -488,7 +511,15 @@ Hooks.on('ready', () => {
 });
 
 Hooks.on('controlToken', () => {
-    game.AlwaysHP?.refreshSelected();
+    if (setting("show-option") == "token") {
+        if (canvas.tokens.controlled.length == 0) // delay a second to make sure we aren't selecting a new token
+            window.setTimeout(() => { if (canvas.tokens.controlled.length == 0) game.AlwaysHP.toggleApp(false); }, 100);
+        else if (!game.AlwaysHP.app)
+            game.AlwaysHP.toggleApp(true);
+        else
+            game.AlwaysHP.refresh();
+    } else
+        game.AlwaysHP.refresh();
 });
 
 Hooks.on('updateActor', (actor, data) => {
@@ -497,7 +528,19 @@ Hooks.on('updateActor', (actor, data) => {
     if (canvas.tokens.controlled.length == 1
         && canvas.tokens.controlled[0]?.actor?.id == actor.id
         && (getProperty(data, dataname + "attributes.death") != undefined || getProperty(data, dataname + setting("resourcename")))) {
-        game.AlwaysHP?.refreshSelected();
+        game.AlwaysHP.refresh();
+    }
+});
+
+Hooks.on('updateCombat', (combat, data) => {
+    if (setting("show-option") == "combat") {
+        game.AlwaysHP.toggleApp(game.combats.active && game.combats.active.started);
+    }
+});
+
+Hooks.on('deleteCombat', (combat, data) => {
+    if (setting("show-option") == "combat") {
+        game.AlwaysHP.toggleApp(game.combats.active && game.combats.active.started);
     }
 });
 
@@ -514,15 +557,9 @@ Hooks.on("getSceneControlButtons", (controls) => {
             icon: "fas fa-briefcase-medical",
             toggle: true,
             active: setting('show-dialog'),
-            onClick: toggled => {
+            onClick: (toggled) => {
                 game.settings.set('always-hp', 'show-dialog', toggled);
-                if (toggled) {
-                    if (!game.AlwaysHP)
-                        game.AlwaysHP = new AlwaysHP().render(true);
-                } else {
-                    if (game.AlwaysHP)
-                        game.AlwaysHP.close({ properClose: true });
-                }
+                game.AlwaysHP.toggleApp(toggled);
             }
         });
     }

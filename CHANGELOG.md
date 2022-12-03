@@ -1,3 +1,23 @@
+# Version 10.4
+
+Added Polish translation, thank you Lioheart
+
+Focus on the input whenever AlwaysHP is rendered.
+
+Fixed issue when selecting multiple tokens to set HP to 0 or to full, using the first tokens min/max value rather than the individual token's value.
+
+Fixed issue with setting defeated status in PF2E.
+
+Fixed issue with showing death saving throw if death saving throw isn't an attribute.
+
+Added the option to show AlwaysHP whenever a token is being controlled, or only during combat.
+
+Added an API for AlwaysHP so other modules can access the application, or toggle the window, or refresh the token.
+
+Fixed issue with selecting a value off the HP bar, when a value is already in the text box.
+
+Fixed issue with display in DSA
+
 # Version 10.3
 
 Fixing a bug, detecting if it's v10 or not.

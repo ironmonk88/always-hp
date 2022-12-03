@@ -209,7 +209,7 @@
 
 #always-hp .resource .bar-change {
     display: none;
-    width: 75px;
+    width: 73px;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
@@ -218,7 +218,8 @@
     position: absolute;
     left: 50%;
     top: 14px;
-    margin-left: -37px;
+    margin-left: -36px;
+    background: url(../../../ui/parchment.jpg) repeat;
 }
 
 #always-hp .resource:hover .bar-change {
@@ -242,4 +243,27 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+.system-dsa5 #always-hp header {
+    overflow: visible;
+    min-height: 30px;
+}
+
+.system-dsa5 #always-hp header h4 {
+    margin-left: 0px;
+    text-align: left;
+    position: absolute;
+    top: 27px;
+    width: calc(100% - 20px);
+    pointer-events: none;
+}
+
+.system-dsa5 #always-hp .window-content {
+    background: url(../../../ui/denim075.png) repeat;
+    margin-top: 7px;
+}
+
+.system-dsa5 #always-hp .alwayshp-content {
+    padding-top: 30px;
 }
