@@ -51,7 +51,6 @@ export class AlwaysHP extends Application {
                 .append($('<div>').addClass('token-stats flexrow').attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : '')));
             delete ui.windows[that.appId];
             this.refreshSelected();
-            $('#alwayshp-hp').focus();
         });
     }
 
@@ -478,9 +477,7 @@ export class AlwaysHP extends Application {
 
 Hooks.on('init', () => {
     registerSettings();
-});
 
-Hooks.on('ready', () => {
     game.AlwaysHP = {
         app: null,
         toggleApp: (show = 'toggle') => {
@@ -488,7 +485,6 @@ Hooks.on('ready', () => {
 
             if (show && !game.AlwaysHP.app) {
                 game.AlwaysHP.app = new AlwaysHP().render(true);
-                window.setTimeout(() => { $('#alwayshp-hp').focus(); }, 100);
             } else if (!show && game.AlwaysHP.app)
                 game.AlwaysHP.app.close({ properClose: true });
         },
@@ -497,6 +493,9 @@ Hooks.on('ready', () => {
                 game.AlwaysHP.app.refreshSelected();
         }
     };
+});
+
+Hooks.on('ready', () => {
     if ((setting("show-option") == 'on' || (setting("show-option") == 'toggle' && setting("show-dialog"))) && (setting("load-option") == 'everyone' || (setting("load-option") == 'gm' == game.user.isGM)))
         game.AlwaysHP.toggleApp(true);
 

@@ -1,3 +1,7 @@
+# Version 10.5
+
+Fixed issues with input field auto focussing.
+
 # Version 10.4
 
 Added Polish translation, thank you Lioheart
