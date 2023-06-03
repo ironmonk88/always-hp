@@ -25,6 +25,11 @@
       "path": "lang/ja.json"
     },
     {
+      "lang": "zh-tw",
+      "name": "正體中文",
+      "path": "lang/zh-tw.json"
+    },
+    {
       "lang": "pl",
       "name": "Polish",
       "path": "lang/pl.json",
