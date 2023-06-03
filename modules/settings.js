@@ -83,6 +83,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "show-savingthrows", {
+        name: i18n("ALWAYSHP.show-savingthrows.name"),
+        hint: i18n("ALWAYSHP.show-savingthrows.hint"),
+        scope: "world",
+        default: true,
+        type: Boolean,
+        config: true
+    });
+
     game.settings.register(modulename, "clear-after-enter", {
         name: i18n("ALWAYSHP.clear-after-enter.name"),
         hint: i18n("ALWAYSHP.clear-after-enter.hint"),

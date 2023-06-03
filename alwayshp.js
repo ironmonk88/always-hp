@@ -80,8 +80,15 @@ export class AlwaysHP extends Application {
     }
 
     async changeHP(value, active) {
-        for (let t of canvas.tokens.controlled) {
-            const a = t.actor;
+        let entities = canvas.tokens.controlled.flatMap((t) => {
+            if (t.actor?.type == "group") {
+                return Array.from(t.actor?.system.members);
+            } else
+                return t;
+        });
+        for (let e of entities) {
+            let a = e instanceof Token ? e.actor : e;
+            let t = e instanceof Actor ? e.token : e;
 
             if (!a)
                 continue;
@@ -102,11 +109,14 @@ export class AlwaysHP extends Application {
             if (active != undefined && setting("add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === defeatedStatus);
                 let effect = game.system.id == "pf2e" ? game.settings.get("pf2e", "deathIcon") : a && status ? status : CONFIG.controlIcons.defeated;
-                let overlay = (isV10() ? t.document.overlayEffect : t.data.overlayEffect);
-                const exists = (effect.icon == undefined ? (overlay == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
 
-                if (exists != active)
-                    await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
+                if (t) {
+                    let overlay = (isV10() ? t.document.overlayEffect : t.data.overlayEffect);
+                    const exists = (effect.icon == undefined ? (overlay == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
+
+                    if (exists != active)
+                        await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
+                }
             }
 
             if (active === false && setting("clear-savingthrows")) {
@@ -120,7 +130,7 @@ export class AlwaysHP extends Application {
                 //if (game.system.id == "dnd5e" && setting("resourcename") == 'attributes.hp') {
                 //    await a.applyDamage(value);
                 //} else {
-                await this.applyDamage(t, tValue);
+                await this.applyDamage(a, t, tValue);
                 //}
             }
         };
@@ -128,8 +138,7 @@ export class AlwaysHP extends Application {
         this.refreshSelected();
     }
 
-    async applyDamage(token, amount, multiplier = 1) {
-        let actor = token.actor;
+    async applyDamage(actor, token, amount, multiplier = 1) {
         let { value, target } = amount;
         let updates = {};
         let dataname = (isV10() ? "system." : "data.");
@@ -161,26 +170,28 @@ export class AlwaysHP extends Application {
                     const dh = Math.clamped(resource.value - change, (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
                     updates[dataname + resourcename + ".value"] = dh;
 
-                    if (isV10()) {
-                        let display = change + dt;
-                        canvas.interface.createScrollingText(token.center, (-display).signedString(), {
-                            anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
-                            direction: display > 0 ? CONST.TEXT_ANCHOR_POINTS.BOTTOM : CONST.TEXT_ANCHOR_POINTS.TOP,
-                            distance: token.h,
-                            fontSize: 28,
-                            stroke: 0x000000,
-                            strokeThickness: 4,
-                            jitter: 0.25
-                        });
-                    } else {
-                        token.hud.createScrollingText((-change).signedString(), {
-                            anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
-                            fontSize: 32,
-                            fill: (change > 0 ? 16711680 : 65280),
-                            stroke: 0x000000,
-                            strokeThickness: 4,
-                            jitter: 0.25
-                        });
+                    if (token) {
+                        if (isV10()) {
+                            let display = change + dt;
+                            canvas.interface.createScrollingText(token.center, (-display).signedString(), {
+                                anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
+                                direction: display > 0 ? CONST.TEXT_ANCHOR_POINTS.BOTTOM : CONST.TEXT_ANCHOR_POINTS.TOP,
+                                distance: token.h,
+                                fontSize: 28,
+                                stroke: 0x000000,
+                                strokeThickness: 4,
+                                jitter: 0.25
+                            });
+                        } else {
+                            token.hud.createScrollingText((-change).signedString(), {
+                                anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
+                                fontSize: 32,
+                                fill: (change > 0 ? 16711680 : 65280),
+                                stroke: 0x000000,
+                                strokeThickness: 4,
+                                jitter: 0.25
+                            });
+                        }
                     }
                 }
             }
@@ -279,7 +290,7 @@ export class AlwaysHP extends Application {
 
         let actor = (canvas.tokens.controlled.length == 1 ? canvas.tokens.controlled[0].actor : null);
         let data = (isV10() ? actor?.system : actor?.data?.data);
-        let showST = (actor != undefined && game.system.id == "dnd5e" && data?.attributes.hp.value == 0 && actor?.hasPlayerOwner);
+        let showST = (actor != undefined && game.system.id == "dnd5e" && data?.attributes?.hp?.value == 0 && actor?.hasPlayerOwner && setting("show-savingthrows"));
         $('.death-savingthrow', this.element).css({ display: (showST ? 'inline-block' : 'none') });
         if (showST && data.attributes.death) {
             $('.death-savingthrow.fail > div', this.element).each(function (idx) { $(this).toggleClass('active', idx < data.attributes.death.failure) });
@@ -322,8 +333,11 @@ export class AlwaysHP extends Application {
 
     getChangeValue(perc) {
         let change = "";
-        if (canvas.tokens.controlled.length == 1) {
+        if (canvas.tokens.controlled.length == 1 && canvas.tokens.controlled[0].actor?.type != "group") {
             const actor = canvas.tokens.controlled[0].actor;
+
+            if (!actor)
+                return;
 
             let dataname = (isV10() ? "system." : "data.");
             let resourcename = (setting("resourcename") || (game.system.primaryTokenAttribute ?? game.system.data.primaryTokenAttribute) || 'attributes.hp');

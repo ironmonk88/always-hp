@@ -1,3 +1,9 @@
+# Version 11.01
+
+Fixed issues with the D&D5e group actor.
+
+Added option to hide the saving throw display.
+
 # Version 10.5
 
 Fixed issues with input field auto focussing.

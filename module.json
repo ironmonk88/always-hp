@@ -1,13 +1,16 @@
 {
   "title": "Always HP",
   "description": "We're always updating HP, add a window to make it easier to adjust that",
-  "version": "10.5",
+  "version": "11.01",
   "authors": [
     {
       "name": "IronMonk",
       "discord": "ironmonk88#4075",
-      "patreon": "https://www.patreon.com/ironmonk",
-      "ko-fi": "https://ko-fi.com/ironmonk88"
+	  "flags": {
+		  "github": "ironmonk88",
+		  "patreon": "ironmonk",
+		  "ko-fi": "ironmonk88"
+	  }
     }
   ],
   "languages": [
@@ -25,7 +28,6 @@
       "lang": "pl",
       "name": "Polish",
       "path": "lang/pl.json",
-      "flags": {}
     }
   ],
   "esmodules": [
@@ -35,16 +37,16 @@
     "css/alwayshp.css"
   ],
   "url": "https://github.com/ironmonk88/always-hp",
-  "download": "https://github.com/ironmonk88/always-hp/archive/10.5.zip",
+  "download": "https://github.com/ironmonk88/always-hp/archive/11.01.zip",
   "manifest": "https://github.com/ironmonk88/always-hp/releases/latest/download/module.json",
   "bugs": "https://github.com/ironmonk88/always-hp/issues",
   "allowBugReporter": true,
   "id": "always-hp",
   "compatibility": {
     "minimum": "9",
-    "verified": "10"
+    "verified": "11"
   },
   "name": "always-hp",
   "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "10"
+  "compatibleCoreVersion": "11"
 }
