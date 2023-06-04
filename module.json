@@ -32,7 +32,7 @@
     {
       "lang": "pl",
       "name": "Polish",
-      "path": "lang/pl.json",
+      "path": "lang/pl.json"
     }
   ],
   "esmodules": [
