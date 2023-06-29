@@ -112,7 +112,7 @@ export class AlwaysHP extends Application {
 
                 if (t) {
                     let overlay = (isV10() ? t.document.overlayEffect : t.data.overlayEffect);
-                    const exists = (effect.icon == undefined ? (overlay == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
+                    const exists = (effect.icon == undefined ? overlay == effect : a.statuses.has(effect.id));
 
                     if (exists != active)
                         await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
@@ -491,6 +491,15 @@ export class AlwaysHP extends Application {
 
 Hooks.on('init', () => {
     registerSettings();
+
+    game.keybindings.register('always-hp', 'toggle-key', {
+        name: 'ALWAYSHP.toggle-key.name',
+        hint: 'ALWAYSHP.toggle-key.hint',
+        editable: [],
+        onDown: () => {
+            game.AlwaysHP.toggleApp();
+        },
+    });
 
     game.AlwaysHP = {
         app: null,

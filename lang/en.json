@@ -39,6 +39,8 @@
   "ALWAYSHP.no-sign-negative.hint": "If no + or - is added, Always HP assumes negative",
   "ALWAYSHP.show-savingthrows.name": "Show Death Saving Throws",
   "ALWAYSHP.show-savingthrows.hint": "Show death saving throws on the always HP display",
+  "ALWAYSHP.toggle-key.name": "Toggle Key",
+  "ALWAYSHP.toggle-key.hint": "Toggle Always HP on and off with a key press",
 
   "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
   "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"

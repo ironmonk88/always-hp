@@ -1,3 +1,9 @@
+# Version 11.04
+
+Fixing issues with v11 statuses.
+
+Adding hotkey to toggle the Always HP window.
+
 # Version 11.01
 
 Fixed issues with the D&D5e group actor.
