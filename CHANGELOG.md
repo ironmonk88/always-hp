@@ -1,3 +1,9 @@
+# Version 11.05
+
+Fixed issue when trying to collect controlled tokens when canvas is turned off
+
+Cleared issue with changes made to Combat Details
+
 # Version 11.04
 
 Fixing issues with v11 statuses.

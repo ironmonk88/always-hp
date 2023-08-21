@@ -3,8 +3,6 @@ import { i18n, setting } from "../alwayshp.js";
 export const registerSettings = function () {
     let modulename = "always-hp";
 
-    const debouncedReload = foundry.utils.debounce(function () { window.location.reload(); }, 100);
-
     let showoptions = {
         'on': game.i18n.localize("ALWAYSHP.alwaysshow"),
         'off': game.i18n.localize("ALWAYSHP.dontshow"),
@@ -26,7 +24,7 @@ export const registerSettings = function () {
         default: "everyone",
         type: String,
         choices: loadoptions,
-        onChange: debouncedReload
+        requiresReload: true
     });
 
     game.settings.register(modulename, "show-option", {

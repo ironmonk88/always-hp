@@ -19,6 +19,17 @@ export let isV10 = () => {
     return isNewerVersion(game.version, "9.9999");
 };
 
+export let patchFunc = (prop, func, type = "WRAPPER") => {
+    if (game.modules.get("lib-wrapper")?.active) {
+        libWrapper.register("monks-combat-details", prop, func, type);
+    } else {
+        const oldFunc = eval(prop);
+        eval(`${prop} = function (event) {
+            return func.call(this, oldFunc.bind(this), ...arguments);
+        }`);
+    }
+}
+
 export class AlwaysHP extends Application {
     tokenname = '';
     tokenstat = '';
@@ -224,9 +235,9 @@ export class AlwaysHP extends Application {
         this.tokentooltip = "";
         let dataname = (isV10() ? "system." : "data.");
         $('.character-name', this.element).removeClass("single");
-        if (canvas.tokens.controlled.length == 0)
+        if (canvas.tokens?.controlled.length == 0)
             this.tokenname = "";
-        else if (canvas.tokens.controlled.length == 1) {
+        else if (canvas.tokens?.controlled.length == 1) {
             let a = canvas.tokens.controlled[0].actor;
             if (!a)
                 this.tokenname = "";
@@ -525,10 +536,13 @@ Hooks.on('ready', () => {
     if (setting("show-option") == "combat" && game.combats.active && game.combats.active.started && !game.AlwaysHP)
         game.AlwaysHP.toggleApp(true);
 
-    let oldDragMouseUp = Draggable.prototype._onDragMouseUp;
-    Draggable.prototype._onDragMouseUp = function (event) {
-        Hooks.call(`dragEnd${this.app.constructor.name}`, this.app);
-        return oldDragMouseUp.call(this, event);
+    if (!game.modules.get('monks-combat-details')?.active && !game.modules.get('monks-enhanced-journal')?.active && !game.modules.get('monks-common-display')?.active) {
+        patchFunc("Draggable.prototype._onDragMouseUp", async function (wrapped, ...args) {
+            for (const cls of this.app.constructor._getInheritanceChain()) {
+                Hooks.callAll(`dragEnd${cls.name}`, this.app, this.app.position);
+            }
+            return wrapped(...args);
+        });
     }
 });
 
