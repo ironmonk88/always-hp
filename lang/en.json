@@ -37,6 +37,8 @@
   "ALWAYSHP.allow-bar-click.hint": "Hover over and click on the HP bar to alter the attribute",
   "ALWAYSHP.no-sign-negative.name": "No sign means negative",
   "ALWAYSHP.no-sign-negative.hint": "If no + or - is added, Always HP assumes negative",
+  "ALWAYSHP.wounds-system.name": "Wounds/Damage System",
+  "ALWAYSHP.wounds-system.hint": "Enable on systems that use Wounds/Damage (e.g. SWADE, SotDL)",
   "ALWAYSHP.show-savingthrows.name": "Show Death Saving Throws",
   "ALWAYSHP.show-savingthrows.hint": "Show death saving throws on the always HP display",
   "ALWAYSHP.toggle-key.name": "Toggle Key",
