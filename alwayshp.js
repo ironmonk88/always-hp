@@ -503,6 +503,7 @@ export class AlwaysHP extends Application {
             if (setting("wounds-system"))  perc = 1 - perc;            
             let change = this.getChangeValue(perc);
 
+            if (setting("wounds-system"))  change = change * -1;      
             $('.bar-change', html).html(change);
             log("resource change");
         }).click(ev => {
