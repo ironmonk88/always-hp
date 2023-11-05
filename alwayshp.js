@@ -500,6 +500,7 @@ export class AlwaysHP extends Application {
             if (!setting("allow-bar-click"))
                 return;
             let perc = ev.offsetX / $(ev.currentTarget).width();
+            if (setting("wounds-system"))  perc = 1 - perc;            
             let change = this.getChangeValue(perc);
 
             $('.bar-change', html).html(change);
@@ -508,6 +509,7 @@ export class AlwaysHP extends Application {
             if (!setting("allow-bar-click"))
                 return;
             let perc = ev.offsetX / $(ev.currentTarget).width();
+            if (setting("wounds-system"))  perc = 1 - perc;
             let change = this.getChangeValue(perc);
 
             this.changeHP({ value: -change, target: 'regular' });
