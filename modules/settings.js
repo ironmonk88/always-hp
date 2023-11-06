@@ -66,7 +66,7 @@ export const registerSettings = function () {
     game.settings.register(modulename, "wounds-system", {
         name: i18n("ALWAYSHP.wounds-system.name"),
         hint: i18n("ALWAYSHP.wounds-system.hint"),
-        scope: "client",
+        scope: "world",
         default: false,
         type: Boolean,
         config: true
