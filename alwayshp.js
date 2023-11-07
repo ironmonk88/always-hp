@@ -98,6 +98,16 @@ export class AlwaysHP extends Application {
     }
 
     async changeHP(value, active) {
+        if (setting("wounds-system")) {
+            switch(value.value) {
+                case 'zero':
+                    value.value = 'full';
+                    break;
+                case 'full':
+                    value.value = 'zero';
+                    break;
+                }
+        }
         let entities = canvas.tokens.controlled.flatMap((t) => {
             if (t.actor?.type == "group") {
                 return Array.from(t.actor?.system.members);
@@ -255,6 +265,7 @@ export class AlwaysHP extends Application {
 
                 let value = this.getResValue(resource, "value", resource);
                 let max = this.getResValue(resource, "max");
+                if (setting("wounds-system")) value =  max - value;
                 let temp = this.getResValue(resource, "temp");
                 let tempmax = this.getResValue(resource, "tempmax");
 
@@ -400,6 +411,7 @@ export class AlwaysHP extends Application {
             let value = this.getValue;
             if (value.value != '') {
                 value.value = Math.abs(value.value);
+                if (setting("wounds-system")) value.value = value.value * -1;
                 this.changeHP(value);
             }
             this.clearInput();
@@ -410,6 +422,7 @@ export class AlwaysHP extends Application {
             let value = this.getValue;
             if (value.value != '') {
                 value.value = -Math.abs(value.value);
+                if (setting("wounds-system")) value.value = value.value * -1;                
                 this.changeHP(value, false);
             }
             this.clearInput();
@@ -462,8 +475,10 @@ export class AlwaysHP extends Application {
 
                     let rawvalue = $('#alwayshp-hp', this.element).val();
 
-                    value.value = (rawvalue.startsWith('+') || (!rawvalue.startsWith('-') && !setting("no-sign-negative")) ? -Math.abs(value.value) : Math.abs(value.value));
-
+                    if (setting("wounds-system"))
+                        value.value = (rawvalue.startsWith('+') || (!rawvalue.startsWith('-') && !setting("no-sign-negative")) ? Math.abs(value.value) : -Math.abs(value.value));    
+                    else
+                        value.value = (rawvalue.startsWith('+') || (!rawvalue.startsWith('-') && !setting("no-sign-negative")) ? -Math.abs(value.value) : Math.abs(value.value));
                     this.changeHP(value); //Heal with a + but everything else is a hurt
                     this.clearInput();
                 }
@@ -485,14 +500,17 @@ export class AlwaysHP extends Application {
             if (!setting("allow-bar-click"))
                 return;
             let perc = ev.offsetX / $(ev.currentTarget).width();
+            if (setting("wounds-system"))  perc = 1 - perc;            
             let change = this.getChangeValue(perc);
 
+            if (setting("wounds-system"))  change = change * -1;      
             $('.bar-change', html).html(change);
             log("resource change");
         }).click(ev => {
             if (!setting("allow-bar-click"))
                 return;
             let perc = ev.offsetX / $(ev.currentTarget).width();
+            if (setting("wounds-system"))  perc = 1 - perc;
             let change = this.getChangeValue(perc);
 
             this.changeHP({ value: -change, target: 'regular' });
