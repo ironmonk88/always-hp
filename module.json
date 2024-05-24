@@ -33,6 +33,11 @@
       "lang": "pl",
       "name": "Polish",
       "path": "lang/pl.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "lang/fr.json"
     }
   ],
   "esmodules": [
