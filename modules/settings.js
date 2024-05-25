@@ -63,6 +63,15 @@ export const registerSettings = function () {
         config: true
     });
 
+    game.settings.register(modulename, "wounds-system", {
+        name: i18n("ALWAYSHP.wounds-system.name"),
+        hint: i18n("ALWAYSHP.wounds-system.hint"),
+        scope: "world",
+        default: false,
+        type: Boolean,
+        config: true
+    });    
+
     game.settings.register(modulename, "add-defeated", {
         name: i18n("ALWAYSHP.add-defeated.name"),
         hint: i18n("ALWAYSHP.add-defeated.hint"),
