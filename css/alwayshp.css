@@ -1,3 +1,10 @@
+:root {
+    --ahp-heal-light: #15838d;
+    --ahp-heal-dark: #4dd0e1;
+    --ahp-hurt-light: #ff6400;
+    --ahp-hurt-dark: #ff0000;
+}
+
 #alwayshp-container {
     height: auto;
     width: 300px;
@@ -75,13 +82,27 @@
 }
 
 .death-savingthrow > div.active {
-    border: 1px solid red;
-    background-color: #ff6400;
+    border: 1px solid var(--ahp-hurt-dark);
+    background-color: var(--ahp-hurt-light);
+}
+
+.death-savingthrow > div.active:after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    margin: 2px;
+    border-radius: 100%;
+    background-color: var(--ahp-hurt-dark);
 }
 
 .death-savingthrow.save > div.active {
-    border: 1px solid #15838d;
-    background-color: rgb(77, 208, 225);
+    border: 1px solid var(--ahp-heal-light);
+    background-color: var(--ahp-heal-dark);
+}
+
+.death-savingthrow.save > div.active:after {
+    background-color: var(--ahp-heal-light);
 }
 
 #alwayshp-btn-fullheal {
@@ -92,24 +113,22 @@
     padding-top:6px;
 }
 
-.bad-ones{
-    
-    border: 1px solid red;
-    border-bottom: 1px solid #ff6400;
-    box-shadow: 0 0 10px #ff6400;
+.bad-ones {
+    border: 1px solid var(--ahp-hurt-dark);
+    box-shadow: 0 0 10px var(--ahp-hurt-light);
 }
 
 .bad-ones i {
-    color: red;
+    color: var(--ahp-hurt-dark);
 }
 
 .good-ones {
-    border: 1px solid rgb(77,208,225);
-    box-shadow: 0 0 10px rgb(77, 208, 225);
+    border: 1px solid var(--ahp-heal-dark);
+    box-shadow: 0 0 10px var(--ahp-heal-dark);
 }
 
 .good-ones i {
-    color: rgb(77, 208, 225);
+    color: var(--ahp-heal-dark);
 }
 
 #always-hp .window-content {

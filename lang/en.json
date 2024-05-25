@@ -43,6 +43,12 @@
   "ALWAYSHP.show-savingthrows.hint": "Show death saving throws on the always HP display",
   "ALWAYSHP.toggle-key.name": "Toggle Key",
   "ALWAYSHP.toggle-key.hint": "Toggle Always HP on and off with a key press",
+  "ALWAYSHP.heal-color.name": "Heal Colors",
+  "ALWAYSHP.heal-color.hint": "Color of the heal buttons, foreground and background",
+  "ALWAYSHP.hurt-color.name": "Hurt Colors",
+  "ALWAYSHP.hurt-color.hint": "Color of the hurt buttons, foreground and background",
+  "ALWAYSHP.focus-key.name": "Focus Key",
+  "ALWAYSHP.focus-key.hint": "Focus on the Always HP input field",
 
   "ALWAYSHP.DeathSavingThrowFail": "Death Savingthrow, Fail",
   "ALWAYSHP.DeathSavingThrowPass": "Death Savingthrow, Pass"

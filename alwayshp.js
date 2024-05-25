@@ -1,4 +1,4 @@
-import { registerSettings } from "./modules/settings.js";
+import { registerSettings } from "./settings.js";
 
 export let debug = (...args) => {
     if (debugEnabled > 1) console.log("DEBUG: alwayshp | ", ...args);
@@ -13,10 +13,6 @@ export let i18n = key => {
 };
 export let setting = key => {
     return game.settings.get("always-hp", key);
-};
-
-export let isV10 = () => {
-    return isNewerVersion(game.version, "9.9999");
 };
 
 export let patchFunc = (prop, func, type = "WRAPPER") => {
@@ -48,7 +44,7 @@ export class AlwaysHP extends Application {
 
     static get defaultOptions() {
         let pos = game.user.getFlag("always-hp", "alwayshpPos");
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             id: "always-hp",
             template: "modules/always-hp/templates/alwayshp.html",
             classes: ["always-hp"],
@@ -64,6 +60,7 @@ export class AlwaysHP extends Application {
         let that = this;
         return super._render(force, options).then((html) => {
             $('h4', this.element)
+                .empty()
                 .addClass('flexrow')
                 .append($('<div>').addClass('character-name').html(this.tokenname))
                 .append($('<div>').addClass('token-stats flexrow').attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : '')));
@@ -108,77 +105,67 @@ export class AlwaysHP extends Application {
                     break;
                 }
         }
-        let entities = canvas.tokens.controlled.flatMap((t) => {
+
+        let actors = canvas.tokens.controlled.flatMap((t) => {
             if (t.actor?.type == "group") {
                 return Array.from(t.actor?.system.members);
             } else
-                return t;
+                return t.actor;
         });
-        for (let e of entities) {
-            let a = e instanceof Token ? e.actor : e;
-            let t = e instanceof Actor ? e.token : e;
-
-            if (!a)
+        for (let a of actors) {
+            if (!a || !(a instanceof Actor))
                 continue;
 
-            let tValue = duplicate(value);
+            let tValue = foundry.utils.duplicate(value);
 
-            let dataname = (isV10() ? "system." : "data.");
             let resourcename = (setting("resourcename") || (game.system?.primaryTokenAttribute ?? game.data?.primaryTokenAttribute) || 'attributes.hp');
-            let resource = getProperty(isV10() ? a : a.data, dataname + resourcename);
+            let resource = foundry.utils.getProperty(a, `system.${resourcename}`);
 
             if (tValue.value == 'zero')
                 tValue.value = this.getResValue(resource, "value", resource) + this.getResValue(resource, "temp");
             if (value.value == 'full')
                 tValue.value = (resource instanceof Object ? resource.value - resource.max : resource);
 
-            let defeatedStatus = (isV10() ? CONFIG.specialStatusEffects.DEFEATED : CONFIG.Combat.defeatedStatusId);
+            let defeatedStatus = CONFIG.specialStatusEffects.DEFEATED;
 
             if (active != undefined && setting("add-defeated")) {
                 let status = CONFIG.statusEffects.find(e => e.id === defeatedStatus);
                 let effect = game.system.id == "pf2e" ? game.settings.get("pf2e", "deathIcon") : a && status ? status : CONFIG.controlIcons.defeated;
 
-                if (t) {
-                    let overlay = (isV10() ? t.document.overlayEffect : t.data.overlayEffect);
-                    const exists = (effect.icon == undefined ? overlay == effect : a.statuses.has(effect.id));
+                const exists = a.statuses.has(effect.id);
 
-                    if (exists != active)
-                        await t.toggleEffect(effect, { overlay: true, active: (active == 'toggle' ? !exists : active) });
-                }
+                if (exists != active)
+                    await a.toggleStatusEffect(effect.id, { active: (active == 'toggle' ? !exists : active) });
             }
 
             if (active === false && setting("clear-savingthrows")) {
-                a.update(isV10()
-                    ? { "system.attributes.death.failure": 0, "system.attributes.death.success": 0 }
-                    : { "data.attributes.death.failure": 0, "data.attributes.death.success": 0 });
+                a.update({
+                    "system.attributes.death.failure": 0,
+                    "system.attributes.death.success": 0
+                });
             }
 
             log('applying damage', a, tValue);
             if (tValue.value != 0) {
-                //if (game.system.id == "dnd5e" && setting("resourcename") == 'attributes.hp') {
-                //    await a.applyDamage(value);
-                //} else {
-                await this.applyDamage(a, t, tValue);
-                //}
+                await this.applyDamage(a, tValue);
             }
         };
 
         this.refreshSelected();
     }
 
-    async applyDamage(actor, token, amount, multiplier = 1) {
+    async applyDamage(actor, amount, multiplier = 1) {
         let { value, target } = amount;
         let updates = {};
-        let dataname = (isV10() ? "system." : "data.");
         let resourcename = (setting("resourcename") || (game.system?.primaryTokenAttribute ?? game.data?.primaryTokenAttribute) || 'attributes.hp');
-        let resource = getProperty((isV10() ? actor : actor.data), dataname + resourcename);
+        let resource = foundry.utils.getProperty(actor, `system.${resourcename}`);
         if (resource instanceof Object) {
             value = Math.floor(parseInt(value) * multiplier);
 
             // Deduct damage from temp HP first
             if (resource.hasOwnProperty("tempmax") && target == "max") {
                 const dm = (resource.tempmax ?? 0) - value;
-                updates[dataname + resourcename + ".tempmax"] = dm;
+                updates[`system.${resourcename}.tempmax`] = dm;
             } else {
                 let dt = 0;
                 let tmpMax = 0;
@@ -189,43 +176,19 @@ export class AlwaysHP extends Application {
 
                     tmpMax = parseInt(resource.tempmax) || 0;
 
-                    updates[dataname + resourcename + ".temp"] = tmp - dt;
+                    updates[`system.${resourcename}.temp`] = tmp - dt;
                 }
 
                 // Update the Actor
                 if (target != 'temp' && target != 'max' && dt >= 0) {
                     let change = (value - dt);
-                    const dh = Math.clamped(resource.value - change, (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
-                    updates[dataname + resourcename + ".value"] = dh;
-
-                    if (token) {
-                        if (isV10()) {
-                            let display = change + dt;
-                            canvas.interface.createScrollingText(token.center, (-display).signedString(), {
-                                anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
-                                direction: display > 0 ? CONST.TEXT_ANCHOR_POINTS.BOTTOM : CONST.TEXT_ANCHOR_POINTS.TOP,
-                                distance: token.h,
-                                fontSize: 28,
-                                stroke: 0x000000,
-                                strokeThickness: 4,
-                                jitter: 0.25
-                            });
-                        } else {
-                            token.hud.createScrollingText((-change).signedString(), {
-                                anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
-                                fontSize: 32,
-                                fill: (change > 0 ? 16711680 : 65280),
-                                stroke: 0x000000,
-                                strokeThickness: 4,
-                                jitter: 0.25
-                            });
-                        }
-                    }
+                    const dh = Math.clamp(resource.value - change, (game.system.id == 'D35E' || game.system.id == 'pf1' ? -2000 : 0), resource.max + tmpMax);
+                    updates[`system.${resourcename}.value`] = dh;
                 }
             }
         } else {
             let val = Math.floor(parseInt(resource));
-            updates[dataname + resourcename] = (val - value);
+            updates[`system.${resourcename}`] = (val - value);
         }
 
         return await actor.update(updates);
@@ -250,7 +213,6 @@ export class AlwaysHP extends Application {
         this.tokenstat = "";
         this.tokentemp = "";
         this.tokentooltip = "";
-        let dataname = (isV10() ? "system." : "data.");
         $('.character-name', this.element).removeClass("single");
         if (canvas.tokens?.controlled.length == 0)
             this.tokenname = "";
@@ -261,7 +223,7 @@ export class AlwaysHP extends Application {
             else {
                 $('.character-name', this.element).addClass("single");
                 let resourcename = setting("resourcename");
-                let resource = getProperty((isV10() ? a : a.data), dataname + resourcename);
+                let resource = foundry.utils.getProperty(a, `system.${resourcename}`);
 
                 let value = this.getResValue(resource, "value", resource);
                 let max = this.getResValue(resource, "max");
@@ -274,8 +236,8 @@ export class AlwaysHP extends Application {
                 let displayMax = max + (tempmax > 0 ? tempmax : 0);
 
                 // Allocate percentages of the total
-                const tempPct = Math.clamped(temp, 0, displayMax) / displayMax;
-                const valuePct = Math.clamped(value, 0, effectiveMax) / displayMax;
+                const tempPct = Math.clamp(temp, 0, displayMax) / displayMax;
+                const valuePct = Math.clamp(value, 0, effectiveMax) / displayMax;
 
                 this.valuePct = valuePct;
                 this.tempPct = tempPct;
@@ -301,12 +263,11 @@ export class AlwaysHP extends Application {
             if (!a)
                 return;
 
-            let prop = (isV10() ? a.system.attributes.death : a.data.data.attributes.death);
+            let prop = a.system.attributes.death;
             prop[save ? 'success' : 'failure'] = Math.max(0, Math.min(3, prop[save ? 'success' : 'failure'] + value));
 
-            let dataname = (isV10() ? "system." : "data.");
             let updates = {};
-            updates[dataname + "attributes.death." + (save ? 'success' : 'failure')] = prop[save ? 'success' : 'failure'];
+            updates["system.attributes.death." + (save ? 'success' : 'failure')] = prop[save ? 'success' : 'failure'];
             canvas.tokens.controlled[0].actor.update(updates);
 
             this.changeToken();
@@ -318,7 +279,7 @@ export class AlwaysHP extends Application {
         $('.token-stats', this.element).attr('title', this.tokentooltip).html((this.tokentemp ? `<div class="stat temp">${this.tokentemp}</div>` : '') + (this.tokenstat ? `<div class="stat" style="background-color:${this.color}">${this.tokenstat}</div>` : ''));
 
         let actor = (canvas.tokens.controlled.length == 1 ? canvas.tokens.controlled[0].actor : null);
-        let data = (isV10() ? actor?.system : actor?.data?.data);
+        let data = actor?.system;
         let showST = (actor != undefined && game.system.id == "dnd5e" && data?.attributes?.hp?.value == 0 && actor?.hasPlayerOwner && setting("show-savingthrows"));
         $('.death-savingthrow', this.element).css({ display: (showST ? 'inline-block' : 'none') });
         if (showST && data.attributes.death) {
@@ -368,9 +329,8 @@ export class AlwaysHP extends Application {
             if (!actor)
                 return;
 
-            let dataname = (isV10() ? "system." : "data.");
             let resourcename = (setting("resourcename") || (game.system.primaryTokenAttribute ?? game.system.data.primaryTokenAttribute) || 'attributes.hp');
-            let resource = getProperty(actor, dataname + resourcename);
+            let resource = foundry.utils.getProperty(actor, `system.${resourcename}`);
 
             if (resource.hasOwnProperty("max")) {
                 let max = this.getResValue(resource, "max");
@@ -537,6 +497,19 @@ Hooks.on('init', () => {
         },
     });
 
+    game.keybindings.register('always-hp', 'focus-key', {
+        name: 'ALWAYSHP.focus-key.name',
+        hint: 'ALWAYSHP.focus-key.hint',
+        editable: [],
+        onDown: () => {
+            if (!game.AlwaysHP.app)
+                game.AlwaysHP.app = new AlwaysHP().render(true);
+            else
+                game.AlwaysHP.app.bringToTop();
+            $('#alwayshp-hp', game.AlwaysHP.app.element).focus();
+        },
+    });
+
     game.AlwaysHP = {
         app: null,
         toggleApp: (show = 'toggle') => {
@@ -555,6 +528,12 @@ Hooks.on('init', () => {
 });
 
 Hooks.on('ready', () => {
+    let r = document.querySelector(':root');
+    r.style.setProperty('--ahp-heal-dark', setting("heal-dark"));
+    r.style.setProperty('--ahp-heal-light', setting("heal-light"));
+    r.style.setProperty('--ahp-hurt-dark', setting("hurt-dark"));
+    r.style.setProperty('--ahp-hurt-light', setting("hurt-light"));
+
     if ((setting("show-option") == 'on' || (setting("show-option") == 'toggle' && setting("show-dialog"))) && (setting("load-option") == 'everyone' || (setting("load-option") == 'gm' == game.user.isGM)))
         game.AlwaysHP.toggleApp(true);
 
@@ -591,10 +570,9 @@ Hooks.on('controlToken', () => {
 
 Hooks.on('updateActor', (actor, data) => {
     //log('Updating actor', actor, data);
-    let dataname = (isV10() ? "system." : "data.");
     if (canvas.tokens.controlled.length == 1
         && canvas.tokens.controlled[0]?.actor?.id == actor.id
-        && (getProperty(data, dataname + "attributes.death") != undefined || getProperty(data, dataname + setting("resourcename")))) {
+        && (foundry.utils.getProperty(data, "system.attributes.death") != undefined || foundry.utils.getProperty(data, `system.${setting("resourcename") }`))) {
         game.AlwaysHP.refresh();
     }
 });
@@ -631,3 +609,15 @@ Hooks.on("getSceneControlButtons", (controls) => {
         });
     }
 });
+
+Hooks.on("renderSettingsConfig", (app, html, user) => {
+    $("input[name='always-hp.heal-dark']", html).replaceWith(`
+    <color-picker name="always-hp.heal-light" value="${setting('heal-light') || '#15838d'}"></color-picker>
+    <color-picker name="always-hp.heal-dark" value="${setting('heal-dark') || '#4dd0e1'}"></color-picker>
+    `);
+    $("input[name='always-hp.hurt-dark']", html).replaceWith(`
+    <color-picker name="always-hp.hurt-light" value="${setting('hurt-light') || '#ff6400'}"></color-picker>
+    <color-picker name="always-hp.hurt-dark" value="${setting('hurt-dark') || '#ff0000'}"></color-picker>
+    `);
+});
+

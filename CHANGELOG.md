@@ -1,3 +1,19 @@
+# Version 12.01
+
+Adding v12 Compatibility
+
+Fixed issue with multiple names being added when AlwaysHP re-renders
+
+Removed scrolling text on hp change because systems cover it
+
+Added a keybinding to focus on the AlwaysHP text field
+
+Added the option to change the colouring of the buttons.  In case the system has different colours, or for people with colour blindness.
+
+Upgraded to handle system that use wounding rather than hp.  Thank you, sasquach45932, for the patch.
+
+French translations added, thank you JDedeWS
+
 # Version 11.05
 
 Fixed issue when trying to collect controlled tokens when canvas is turned off

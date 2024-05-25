@@ -1,4 +1,4 @@
-import { i18n, setting } from "../alwayshp.js";
+import { i18n, setting } from "./alwayshp.js";
 
 export const registerSettings = function () {
     let modulename = "always-hp";
@@ -70,7 +70,7 @@ export const registerSettings = function () {
         default: false,
         type: Boolean,
         config: true
-    });    
+    });
 
     game.settings.register(modulename, "add-defeated", {
         name: i18n("ALWAYSHP.add-defeated.name"),
@@ -124,6 +124,54 @@ export const registerSettings = function () {
         default: false,
         type: Boolean,
         config: true
+    });
+
+    game.settings.register(modulename, "heal-dark", {
+        name: i18n("ALWAYSHP.heal-color.name"),
+        hint: i18n("ALWAYSHP.heal-color.hint"),
+        scope: "client",
+        default: "",
+        type: String,
+        config: true,
+        onChange: (value) => {
+            let r = document.querySelector(':root');
+            r.style.setProperty('--ahp-heal-dark', value || '#4dd0e1');
+        },
+    });
+
+    game.settings.register(modulename, "heal-light", {
+        scope: "client",
+        default: "",
+        type: String,
+        config: false,
+        onChange: (value) => {
+            let r = document.querySelector(':root');
+            r.style.setProperty('--ahp-heal-light', value || '#15838d');
+        },
+    });
+
+    game.settings.register(modulename, "hurt-dark", {
+        name: i18n("ALWAYSHP.hurt-color.name"),
+        hint: i18n("ALWAYSHP.hurt-color.hint"),
+        scope: "client",
+        default: "",
+        type: String,
+        config: true,
+        onChange: (value) => {
+            let r = document.querySelector(':root');
+            r.style.setProperty('--ahp-hurt-dark', value || '#ff0000');
+        },
+    });
+
+    game.settings.register(modulename, "hurt-light", {
+        scope: "client",
+        default: "",
+        type: String,
+        config: false,
+        onChange: (value) => {
+            let r = document.querySelector(':root');
+            r.style.setProperty('--ahp-hurt-light', value || '#ff6400');
+        },
     });
 
     /*
